@@ -42,7 +42,7 @@ public class ProfessorCadastro extends InternalFrame {
         oProfessor.setRg(txtRG.getText());
         oProfessor.setTitulo(cboTitulo.getId());
         
-        new ProfessorService().salvar(oProfessor);
+        oProfessor = new ProfessorService().salvar(oProfessor);
         
         carregarProfessor(oProfessor.getId());
         
@@ -96,6 +96,7 @@ public class ProfessorCadastro extends InternalFrame {
         setClosable(true);
         setMaximizable(true);
         setTitle("VR Curso - Professores");
+        setEnabled(false);
 
         toolbar.setNovoVisible(true);
         toolbar.setSalvarVisible(true);

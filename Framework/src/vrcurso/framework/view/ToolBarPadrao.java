@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package vrcurso.framework.view;
 
 import javax.swing.JButton;
@@ -10,10 +5,6 @@ import javax.swing.SwingUtilities;
 import vrcurso.framework.Mensagem;
 import vrcurso.framework.exception.ValidacaoException;
 
-/**
- *
- * @author vitor
- */
 public class ToolBarPadrao extends javax.swing.JPanel {
 
     private boolean consultarVisible = false;

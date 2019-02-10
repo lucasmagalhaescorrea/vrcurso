@@ -33,7 +33,7 @@ public class ItemComboBoxVO {
 
     @Override
     public boolean equals(Object obj) {
-        return getId() == getId();
+        return getId() == ((ItemComboBoxVO) obj).getId();
     }
     
 }

@@ -22,16 +22,19 @@ public class ProfessorDao implements IDao {
         if (!i_professorFiltro.getId().isEmpty()) {
             sql.append(!where ? " WHERE" : " AND");
             sql.append(" id = " + i_professorFiltro.getId());
+            where = true;
         }
 
         if (!i_professorFiltro.getNome().isEmpty()) {
             sql.append(!where ? " WHERE" : " AND");
             sql.append(" nome = LIKE'%" + i_professorFiltro.getNome() + "%'");
+            where = true;
         }
 
         if (!i_professorFiltro.getCpf().isEmpty()) {
             sql.append(!where ? " WHERE" : " AND");
             sql.append(" cpf = " + i_professorFiltro.getCpf());
+            where = true;
         }
 
         sql.append(" ORDER BY nome");
@@ -66,7 +69,7 @@ public class ProfessorDao implements IDao {
         Conexao.getStatement().executeUpdate(sql.toString());
     }
 
-    public void salvar(Professor i_professor) throws Exception {
+    public Professor salvar(Professor i_professor) throws Exception {
         StringBuilder sql = new StringBuilder();
 
         if (i_professor.getId() == 0) {
@@ -77,17 +80,21 @@ public class ProfessorDao implements IDao {
             Conexao.getStatement().execute(sql.toString());
 
             ResultSet rst = Conexao.getStatement().executeQuery("select currval('professor_id_seq')");
+            
+            rst.next();
 
             i_professor.setId(rst.getInt(1));
 
         } else {
 
             sql.append("UPDATE professor");
-            sql.append(" SET nome = '" + i_professor.getNome() + "' AND rg = '" + i_professor.getRg() + "' AND cpf = " + i_professor.getCpf() + " AND titulo =  " + i_professor.getTitulo());
+            sql.append(" SET nome = '" + i_professor.getNome() + "', rg = '" + i_professor.getRg() + "', cpf = " + i_professor.getCpf() + ", titulo =  " + i_professor.getTitulo());
             sql.append(" WHERE id = " + i_professor.getId());
 
             Conexao.getStatement().executeUpdate(sql.toString());
         }
+        
+        return i_professor;
 
     }
 

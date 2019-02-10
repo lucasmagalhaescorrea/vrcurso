@@ -13,83 +13,88 @@ import vrcurso.view.tablemodel.ProfessorTableModel;
 import vrcurso.vo.ProfessorFiltroVO;
 
 public class ProfessorConsulta extends InternalFrame {
-    
+
     private List<Professor> vProfessor = new ArrayList<>();
-    
+
     @Override
     public void consultar() throws Exception {
         
+        limparTabela(tblConsulta);
+
         ProfessorFiltroVO oFiltro = new ProfessorFiltroVO();
         oFiltro.setCpf(txtCPF.getText());
         oFiltro.setId(txtCodigo.getText());
         oFiltro.setNome(txtNome.getText());
-        
+
         vProfessor = new ProfessorService().consultar(oFiltro);
-        
+
         configurarTabela();
     }
-    
-    private void configurarTabela(){
+
+    private void configurarTabela() {
         tblConsulta.setModel(new ProfessorTableModel(vProfessor));
-        
+
         int[] tamCol = new int[5];
         tamCol[0] = 50;
         tamCol[1] = 200;
         tamCol[2] = 120;
         tamCol[3] = 120;
         tamCol[4] = 120;
-        
-        for(int i = 0; i < tblConsulta.getModel().getColumnCount(); i++){
+
+        for (int i = 0; i < tblConsulta.getModel().getColumnCount(); i++) {
             tblConsulta.getColumnModel().getColumn(i).setMinWidth(tamCol[i]);
             tblConsulta.getColumnModel().getColumn(i).setWidth(tamCol[i]);
             tblConsulta.getColumnModel().getColumn(i).setPreferredWidth(tamCol[i]);
         }
-        
+
         tblConsulta.requestFocus();
     }
 
     @Override
     public void editar() throws Exception {
-        if(tblConsulta.getSelectedRow() == -1){
+        if (tblConsulta.getSelectedRow() == -1) {
             throw new ValidacaoException(MensagensPadrao.NENHUM_REGISTRO_SELECIONADO);
         }
-        
+
         Professor oProfessor = vProfessor.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow()));
-        
+
         ProfessorCadastro form = new ProfessorCadastro(mainFrame);
         form.carregarProfessor(oProfessor.getId());
         form.setVisible(true);
     }
-    
+
     @Override
     public void remover() throws Exception {
-        if(tblConsulta.getSelectedRow() == -1){
+        if (tblConsulta.getSelectedRow() == -1) {
             throw new ValidacaoException(MensagensPadrao.NENHUM_REGISTRO_SELECIONADO);
         }
-        
+
         Professor oProfessor = vProfessor.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow()));
         new ProfessorService().remover(oProfessor);
-        
+
+        vProfessor.remove(oProfessor);
+        configurarTabela();
+
         Mensagem.exibirMensagem(this, MensagensPadrao.REGISTRO_EXCLUIDO_SUCESSO);
     }
 
     @Override
     public void novo() throws Exception {
-        
+
         ProfessorCadastro form = new ProfessorCadastro(mainFrame);
         form.novo();
         form.setVisible(true);
     }
-    
+
     public ProfessorConsulta(JFrame i_principal) throws Exception {
         initComponents();
         mainFrame = i_principal;
-        
+
         toolbar.setInternalFrame(this);
-        
+
         setSelected(true);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -129,6 +134,12 @@ public class ProfessorConsulta extends InternalFrame {
 
             }
         ));
+        tblConsulta.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tblConsulta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblConsultaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblConsulta);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -161,6 +172,11 @@ public class ProfessorConsulta extends InternalFrame {
         btnConsultar.setFocusable(false);
         btnConsultar.setMargin(new java.awt.Insets(2, 2, 2, 2));
         btnConsultar.setOpaque(true);
+        btnConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnConsultar);
         btnConsultar.setBounds(720, 45, 90, 33);
 
@@ -202,6 +218,28 @@ public class ProfessorConsulta extends InternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tblConsultaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblConsultaMouseClicked
+        try {
+            if (evt.getClickCount() == 2) {
+                editar();
+            }
+        } catch (ValidacaoException e) {
+            Mensagem.exibirAlerta(this, e);
+        } catch (Exception e) {
+            Mensagem.exibirErro(this, e);
+        }
+    }//GEN-LAST:event_tblConsultaMouseClicked
+
+    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        try {
+            consultar();
+        } catch (ValidacaoException e) {
+            Mensagem.exibirAlerta(this, e);
+        } catch (Exception e) {
+            Mensagem.exibirErro(this, e);
+        }
+    }//GEN-LAST:event_btnConsultarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

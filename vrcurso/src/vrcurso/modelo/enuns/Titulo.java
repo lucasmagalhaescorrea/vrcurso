@@ -30,7 +30,7 @@ public enum Titulo {
     
     public static String getDescricao(int i_id){
         
-        for(DiaSemana s : DiaSemana.values()){
+        for(Titulo s : Titulo.values()){
             if(s.getId() == i_id){
                 return s.getDescricao();
             }

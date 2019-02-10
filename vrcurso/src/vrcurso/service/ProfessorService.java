@@ -13,29 +13,30 @@ public class ProfessorService extends HttpService {
 
         Type professorFiltroType = new TypeToken<ProfessorFiltroVO>() {
         }.getType();
-        
-        Type professorType = new TypeToken<List<Professor>>(){}.getType();
-        
+
+        Type professorType = new TypeToken<List<Professor>>() {
+        }.getType();
+
         List<Professor> vProfessor = new Gson().fromJson(consumirWebService(EndPoints.PROFESSOR_CONSULTAR, new Gson().toJson(i_professorFiltro, professorFiltroType)), professorType);
 
         return vProfessor;
     }
-    
-    public void remover(Professor i_professor) throws Exception{
-         Type professorType = new TypeToken<Professor>() {
+
+    public void remover(Professor i_professor) throws Exception {
+        Type professorType = new TypeToken<Professor>() {
         }.getType();
-        
+
         consumirWebService(EndPoints.PROFESSOR_REMOVER, new Gson().toJson(i_professor, professorType));
-    
+
     }
-    
-    
-    public void salvar(Professor i_professor) throws Exception {
+
+    public Professor salvar(Professor i_professor) throws Exception {
 
         Type professorType = new TypeToken<Professor>() {
         }.getType();
-        
-        consumirWebService(EndPoints.PROFESSOR_SALVAR, new Gson().toJson(i_professor, professorType));
+
+        i_professor = new Gson().fromJson(consumirWebService(EndPoints.PROFESSOR_SALVAR, new Gson().toJson(i_professor, professorType)), professorType);
+        return i_professor;
     }
 
 }

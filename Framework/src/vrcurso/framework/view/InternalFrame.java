@@ -1,6 +1,8 @@
 package vrcurso.framework.view;
 
 import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class InternalFrame extends javax.swing.JInternalFrame {
     
@@ -20,6 +22,10 @@ public class InternalFrame extends javax.swing.JInternalFrame {
     
     public void editar() throws Exception {
     };
+    
+    protected void limparTabela(JTable i_table){
+        i_table.setModel(new DefaultTableModel());
+    }
 
     /**
      * Creates new form ProfessorConsulta

@@ -74,13 +74,13 @@ public class ProfessorResource {
             oProfessorDao.validar(oProfessor);
 
             oProfessorDao.salvar(oProfessor);
+            
+            return new Gson().toJson(oProfessor);
         } catch (ValidacaoException e) {
             return "|ALERTA|" + e.getMessage();
         } catch (Exception e) {
             return "|ERRO|" + e.getMessage();
         }
-
-        return "";
     }
 
     @POST
