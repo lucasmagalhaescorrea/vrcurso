@@ -13,7 +13,9 @@ public class ProfessorDao implements IDao {
 
     public List<Professor> consultar(ProfessorFiltroVO i_professorFiltro) throws Exception {
 
-        Statement ps = Conexao.getStatement();
+        Statement stm = Conexao.getStatement();
+        ResultSet rst;
+        List<Professor> vProfessor = new ArrayList<>();
 
         boolean where = false;
         StringBuilder sql = new StringBuilder();
@@ -27,7 +29,7 @@ public class ProfessorDao implements IDao {
 
         if (!i_professorFiltro.getNome().isEmpty()) {
             sql.append(!where ? " WHERE" : " AND");
-            sql.append(" nome = LIKE'%" + i_professorFiltro.getNome() + "%'");
+            sql.append(" nome LIKE '%" + i_professorFiltro.getNome() + "%'");
             where = true;
         }
 
@@ -39,9 +41,7 @@ public class ProfessorDao implements IDao {
 
         sql.append(" ORDER BY nome");
 
-        ResultSet rst = ps.executeQuery(sql.toString());
-
-        List<Professor> vProfessor = new ArrayList<>();
+        rst = stm.executeQuery(sql.toString());
 
         if (!rst.next()) {
             throw new ValidacaoException(MensagensPadrao.REGISTROS_NAO_ENCONTRADOS);
@@ -63,24 +63,27 @@ public class ProfessorDao implements IDao {
 
     public void remover(Professor i_professor) throws Exception {
 
+        Statement stm = Conexao.getStatement();
+        
         StringBuilder sql = new StringBuilder();
         sql.append("DELETE FROM professor WHERE id = " + i_professor.getId());
 
-        Conexao.getStatement().executeUpdate(sql.toString());
+        stm.executeUpdate(sql.toString());
     }
 
     public Professor salvar(Professor i_professor) throws Exception {
+        Statement stm = Conexao.getStatement();
         StringBuilder sql = new StringBuilder();
+        ResultSet rst;
 
         if (i_professor.getId() == 0) {
 
             sql.append("INSERT INTO professor(nome, rg, cpf, titulo)");
             sql.append(" VALUES ('" + i_professor.getNome() + "', '" + i_professor.getRg() + "', " + i_professor.getCpf() + ", " + i_professor.getTitulo() + ");");
 
-            Conexao.getStatement().execute(sql.toString());
+            stm.execute(sql.toString());
 
-            ResultSet rst = Conexao.getStatement().executeQuery("select currval('professor_id_seq')");
-            
+            rst = Conexao.getStatement().executeQuery("select currval('professor_id_seq')");
             rst.next();
 
             i_professor.setId(rst.getInt(1));
@@ -91,7 +94,7 @@ public class ProfessorDao implements IDao {
             sql.append(" SET nome = '" + i_professor.getNome() + "', rg = '" + i_professor.getRg() + "', cpf = " + i_professor.getCpf() + ", titulo =  " + i_professor.getTitulo());
             sql.append(" WHERE id = " + i_professor.getId());
 
-            Conexao.getStatement().executeUpdate(sql.toString());
+            stm.executeUpdate(sql.toString());
         }
         
         return i_professor;
