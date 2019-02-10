@@ -34,18 +34,6 @@ public class DisciplinaDao implements IDao {
             where = true;
         }
 
-        if (!i_disciplinaFiltro.getDiaSemana().isEmpty()) {
-            sql.append(!where ? " WHERE" : " AND");
-            sql.append(" d.diasemana = " + i_disciplinaFiltro.getDiaSemana());
-            where = true;
-        }
-
-        if (!i_disciplinaFiltro.getPeriodo().isEmpty()) {
-            sql.append(!where ? " WHERE" : " AND");
-            sql.append(" d.periodo = " + i_disciplinaFiltro.getPeriodo());
-            where = true;
-        }
-
         sql.append(" ORDER BY d.descricao");
 
         rst = stm.executeQuery(sql.toString());
@@ -64,7 +52,6 @@ public class DisciplinaDao implements IDao {
             oDisciplina.setProfessor(rst.getString("professor"));
             oDisciplina.setDiaSemana(rst.getInt("diasemana"));
             oDisciplina.setCargaHoraria(rst.getInt("cargahoraria"));
-            oDisciplina.setPeriodo(rst.getInt("periodo"));
 
             vDisciplina.add(oDisciplina);
         } while (rst.next());
@@ -86,9 +73,9 @@ public class DisciplinaDao implements IDao {
 
         if (i_disciplina.getId() == 0) {
 
-            sql.append("INSERT INTO disciplina(descricao, ementa, limitevagas, id_professor, diasemana, cargahoraria, periodo)");
+            sql.append("INSERT INTO disciplina(descricao, ementa, limitevagas, id_professor, diasemana, cargahoraria)");
             sql.append(" VALUES ('" + i_disciplina.getDescricao() + "','" + i_disciplina.getEmenta() + "', " + i_disciplina.getLimiteVagas());
-            sql.append(", " + i_disciplina.getIdProfessor() + ", " + i_disciplina.getDiaSemana() + ", " + i_disciplina.getCargaHoraria() + ", " + i_disciplina.getPeriodo() + ");");
+            sql.append(", " + i_disciplina.getIdProfessor() + ", " + i_disciplina.getDiaSemana() + ", " + i_disciplina.getCargaHoraria() + ");");
 
             stm.execute(sql.toString());
 
@@ -102,7 +89,7 @@ public class DisciplinaDao implements IDao {
             sql.append("UPDATE disciplina");
             sql.append(" SET descricao = '" + i_disciplina.getDescricao() + "', ementa = '" + i_disciplina.getEmenta() + "', limitevagas = " + i_disciplina.getLimiteVagas());
             sql.append(" , id_professor = " + i_disciplina.getIdProfessor() + ", diasemana = " + i_disciplina.getDiaSemana());
-            sql.append(" , cargahoraria = " + i_disciplina.getCargaHoraria() + ", periodo = " + i_disciplina.getPeriodo());
+            sql.append(" , cargahoraria = " + i_disciplina.getCargaHoraria());
             sql.append(" WHERE id = " + i_disciplina.getId());
 
             stm.executeUpdate(sql.toString());

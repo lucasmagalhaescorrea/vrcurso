@@ -137,7 +137,7 @@ public class AlunoConsulta extends InternalFrame {
         txtCPF = new javax.swing.JTextField();
 
         setClosable(true);
-        setTitle("VR Cursos - Disciplina");
+        setTitle("VR Cursos - Aluno");
 
         toolbar.setConsultarVisible(true);
         toolbar.setNovoVisible(true);

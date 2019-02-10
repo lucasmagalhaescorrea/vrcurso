@@ -8,6 +8,8 @@ public class CursoDisciplina {
     private String disciplina;
     private int diaSemana;
     private String professor;
+    public int cargahoraria;
+    private int idProfessor;
 
     public int getId() {
         return id;
@@ -56,5 +58,20 @@ public class CursoDisciplina {
     public void setProfessor(String professor) {
         this.professor = professor;
     }  
-    
+
+    public int getCargahoraria() {
+        return cargahoraria;
+    }
+
+    public void setCargahoraria(int cargahoraria) {
+        this.cargahoraria = cargahoraria;
+    }    
+
+    public int getIdProfessor() {
+        return idProfessor;
+    }
+
+    public void setIdProfessor(int idProfessor) {
+        this.idProfessor = idProfessor;
+    }
 }

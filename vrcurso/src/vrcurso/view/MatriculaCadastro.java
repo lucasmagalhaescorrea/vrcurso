@@ -11,16 +11,17 @@ import vrcurso.framework.vo.ItemComboBoxVO;
 import vrcurso.modelo.Curso;
 import vrcurso.modelo.CursoDisciplina;
 import vrcurso.modelo.Disciplina;
+import vrcurso.modelo.Matricula;
 import vrcurso.modelo.enuns.Periodo;
 import vrcurso.service.CursoService;
 import vrcurso.view.tablemodel.CursoDisciplinaTableModel;
 import vrcurso.vo.CursoFiltroVO;
 
-public class CursoCadastro extends InternalFrame {
+public class MatriculaCadastro extends InternalFrame {
 
-    private Curso oCurso;
+    private Matricula oMatricula;
 
-    public CursoCadastro(JFrame i_principal) throws Exception {
+    public MatriculaCadastro(JFrame i_principal) throws Exception {
         initComponents();
 
         mainFrame = i_principal;
@@ -49,13 +50,13 @@ public class CursoCadastro extends InternalFrame {
         oCursoDisciplina.setCargahoraria(i_Disciplina.getCargaHoraria());
         oCursoDisciplina.setIdProfessor(i_Disciplina.getIdProfessor());
 
-        oCurso.getvCursoDisciplina().add(oCursoDisciplina);
+        oMatricula.getvCursoDisciplina().add(oCursoDisciplina);
 
         configurarTabela();
     }
 
     private void configurarTabela() {
-        tblDados.setModel(new CursoDisciplinaTableModel(oCurso.getvCursoDisciplina()));
+        tblDados.setModel(new CursoDisciplinaTableModel(oMatricula.getvCursoDisciplina()));
 
         int[] tamCol = new int[6];
         tamCol[0] = 100;
@@ -79,22 +80,22 @@ public class CursoCadastro extends InternalFrame {
             throw new ValidacaoException(MensagensPadrao.NENHUM_REGISTRO_SELECIONADO);
         }
 
-        CursoDisciplina oCursoDisciplina = oCurso.getvCursoDisciplina().get(tblDados.convertRowIndexToModel(tblDados.getSelectedRow()));
+        CursoDisciplina oCursoDisciplina = oMatricula.getvCursoDisciplina().get(tblDados.convertRowIndexToModel(tblDados.getSelectedRow()));
 
         if (oCursoDisciplina.getId() > 0) {
-            oCurso.getvCursoDisciplinaExclusao().add(oCursoDisciplina);
+            oMatricula.getvCursoDisciplinaExclusao().add(oCursoDisciplina);
         }
 
-        oCurso.getvCursoDisciplina().remove(oCursoDisciplina);
+        oMatricula.getvCursoDisciplina().remove(oCursoDisciplina);
 
         configurarTabela();
     }
 
     private void limparDisciplinas() throws ValidacaoException {
 
-        for (CursoDisciplina oCursoDisciplina : oCurso.getvCursoDisciplina()) {
+        for (CursoDisciplina oCursoDisciplina : oMatricula.getvCursoDisciplina()) {
             if (oCursoDisciplina.getId() > 0) {
-                oCurso.getvCursoDisciplinaExclusao().add(oCursoDisciplina);
+                oMatricula.getvCursoDisciplinaExclusao().add(oCursoDisciplina);
             }
         }
 
@@ -103,22 +104,22 @@ public class CursoCadastro extends InternalFrame {
 
     @Override
     public void salvar() throws Exception {
-        oCurso.setDescricao(txtDescricao.getText());
-        oCurso.setDuracaoMeses(Integer.parseInt(txtDuracao.getText()));
-        oCurso.setQtdAlunos(Integer.parseInt(txtQtdeAlunos.getText()));
-        oCurso.setPeriodo(cboPeriodo.getId());
-        oCurso.setCargaHoraria(Integer.parseInt(txtCargaHoraria.getText()));
+        oMatricula.setDescricao(txtDescricao.getText());
+        oMatricula.setDuracaoMeses(Integer.parseInt(txtDuracao.getText()));
+        oMatricula.setQtdAlunos(Integer.parseInt(txtQtdeAlunos.getText()));
+        oMatricula.setPeriodo(cboPeriodo.getId());
+        oMatricula.setCargaHoraria(Integer.parseInt(txtCargaHoraria.getText()));
 
-        oCurso = new CursoService().salvar(oCurso);
+        oMatricula = new CursoService().salvar(oMatricula);
 
-        carregarCurso(oCurso.getId());
+        carregarCurso(oMatricula.getId());
 
         Mensagem.exibirMensagem(this, MensagensPadrao.REGISTRO_SALVO_SUCESSO);
     }
 
     @Override
     public void novo() throws Exception {
-        oCurso = new Curso();
+        oMatricula = new Curso();
         txtCodigo.setText("");
         txtDescricao.setText("");
         txtDuracao.setText("");
@@ -132,13 +133,13 @@ public class CursoCadastro extends InternalFrame {
         CursoFiltroVO oFiltro = new CursoFiltroVO();
         oFiltro.setId(String.valueOf(i_id));
 
-        oCurso = new CursoService().carregar(oFiltro);
-        txtCodigo.setText(Format.number(oCurso.getId(), 6));
-        txtDescricao.setText(oCurso.getDescricao());
-        txtDuracao.setText(String.valueOf(oCurso.getDuracaoMeses()));
-        txtQtdeAlunos.setText(String.valueOf(oCurso.getQtdAlunos()));
-        txtCargaHoraria.setText(String.valueOf(oCurso.getCargaHoraria()));
-        cboPeriodo.setId(oCurso.getPeriodo());
+        oMatricula = new CursoService().carregar(oFiltro);
+        txtCodigo.setText(Format.number(oMatricula.getId(), 6));
+        txtDescricao.setText(oMatricula.getDescricao());
+        txtDuracao.setText(String.valueOf(oMatricula.getDuracaoMeses()));
+        txtQtdeAlunos.setText(String.valueOf(oMatricula.getQtdAlunos()));
+        txtCargaHoraria.setText(String.valueOf(oMatricula.getCargaHoraria()));
+        cboPeriodo.setId(oMatricula.getPeriodo());
 
         configurarTabela();
     }
@@ -153,27 +154,23 @@ public class CursoCadastro extends InternalFrame {
         btnSalvar = new javax.swing.JButton();
         btnSair = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        txtCodigo = new javax.swing.JTextField();
-        txtDescricao = new javax.swing.JTextField();
-        txtDuracao = new javax.swing.JTextField();
-        txtQtdeAlunos = new javax.swing.JTextField();
-        cboPeriodo = new vrcurso.framework.view.ComboBox();
-        txtCargaHoraria = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblDados = new javax.swing.JTable();
         btnNovo = new javax.swing.JButton();
         btnRemover = new javax.swing.JButton();
         btnLimpar = new javax.swing.JButton();
+        txtCodAluno = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        btnConsultarAluno = new javax.swing.JButton();
+        txtNomeAluno = new javax.swing.JTextField();
+        txtCodAluno1 = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        btnConsultarAluno1 = new javax.swing.JButton();
+        txtNomeAluno1 = new javax.swing.JTextField();
 
         setClosable(true);
-        setTitle("VR Cursos - Curso");
+        setTitle("VR Cursos - Matrícula");
         setEnabled(false);
 
         toolbar.setNovoVisible(true);
@@ -235,47 +232,8 @@ public class CursoCadastro extends InternalFrame {
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Curso"));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Matricula"));
         jPanel3.setLayout(null);
-
-        jLabel1.setText("Código");
-        jPanel3.add(jLabel1);
-        jLabel1.setBounds(10, 30, 39, 16);
-
-        jLabel2.setText("Descrição");
-        jPanel3.add(jLabel2);
-        jLabel2.setBounds(120, 30, 110, 16);
-
-        jLabel3.setText("Carga Horária");
-        jPanel3.add(jLabel3);
-        jLabel3.setBounds(10, 140, 130, 16);
-
-        jLabel4.setText("Qtde Alunos");
-        jPanel3.add(jLabel4);
-        jLabel4.setBounds(160, 80, 130, 16);
-
-        jLabel5.setText("Período");
-        jPanel3.add(jLabel5);
-        jLabel5.setBounds(330, 80, 140, 16);
-
-        jLabel7.setText("Duração");
-        jPanel3.add(jLabel7);
-        jLabel7.setBounds(10, 80, 130, 16);
-
-        txtCodigo.setEditable(false);
-        txtCodigo.setEnabled(false);
-        jPanel3.add(txtCodigo);
-        txtCodigo.setBounds(10, 50, 100, 22);
-        jPanel3.add(txtDescricao);
-        txtDescricao.setBounds(120, 50, 500, 22);
-        jPanel3.add(txtDuracao);
-        txtDuracao.setBounds(10, 100, 140, 22);
-        jPanel3.add(txtQtdeAlunos);
-        txtQtdeAlunos.setBounds(160, 100, 160, 22);
-        jPanel3.add(cboPeriodo);
-        cboPeriodo.setBounds(330, 100, 270, 22);
-        jPanel3.add(txtCargaHoraria);
-        txtCargaHoraria.setBounds(10, 160, 130, 22);
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Disciplinas"));
@@ -296,7 +254,7 @@ public class CursoCadastro extends InternalFrame {
         jScrollPane1.setViewportView(tblDados);
 
         jPanel4.add(jScrollPane1);
-        jScrollPane1.setBounds(20, 20, 1070, 366);
+        jScrollPane1.setBounds(20, 20, 1070, 230);
 
         btnNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnAdicionar.png"))); // NOI18N
         btnNovo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -309,7 +267,7 @@ public class CursoCadastro extends InternalFrame {
             }
         });
         jPanel4.add(btnNovo);
-        btnNovo.setBounds(990, 390, 30, 30);
+        btnNovo.setBounds(990, 260, 30, 30);
 
         btnRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnRemover.png"))); // NOI18N
         btnRemover.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -322,7 +280,7 @@ public class CursoCadastro extends InternalFrame {
             }
         });
         jPanel4.add(btnRemover);
-        btnRemover.setBounds(1020, 390, 30, 30);
+        btnRemover.setBounds(1020, 260, 30, 30);
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnlimpar.png"))); // NOI18N
         btnLimpar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -335,10 +293,64 @@ public class CursoCadastro extends InternalFrame {
             }
         });
         jPanel4.add(btnLimpar);
-        btnLimpar.setBounds(1050, 390, 30, 30);
+        btnLimpar.setBounds(1050, 260, 30, 30);
 
         jPanel3.add(jPanel4);
-        jPanel4.setBounds(10, 200, 1120, 450);
+        jPanel4.setBounds(10, 150, 1120, 310);
+
+        txtCodAluno.setEditable(false);
+        txtCodAluno.setEnabled(false);
+        jPanel3.add(txtCodAluno);
+        txtCodAluno.setBounds(10, 55, 70, 22);
+
+        jLabel6.setText("Aluno");
+        jPanel3.add(jLabel6);
+        jLabel6.setBounds(10, 30, 90, 16);
+
+        btnConsultarAluno.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnConsultar.png"))); // NOI18N
+        btnConsultarAluno.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnConsultarAluno.setContentAreaFilled(false);
+        btnConsultarAluno.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnConsultarAluno.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btnConsultarAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarAlunoActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnConsultarAluno);
+        btnConsultarAluno.setBounds(90, 50, 30, 30);
+
+        txtNomeAluno.setEditable(false);
+        txtNomeAluno.setEnabled(false);
+        jPanel3.add(txtNomeAluno);
+        txtNomeAluno.setBounds(130, 50, 260, 22);
+
+        txtCodAluno1.setEditable(false);
+        txtCodAluno1.setEnabled(false);
+        jPanel3.add(txtCodAluno1);
+        txtCodAluno1.setBounds(10, 110, 70, 22);
+
+        jLabel8.setText("Curso");
+        jPanel3.add(jLabel8);
+        jLabel8.setBounds(10, 90, 90, 16);
+
+        btnConsultarAluno1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnConsultar.png"))); // NOI18N
+        btnConsultarAluno1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnConsultarAluno1.setContentAreaFilled(false);
+        btnConsultarAluno1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnConsultarAluno1.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btnConsultarAluno1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarAluno1ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btnConsultarAluno1);
+        btnConsultarAluno1.setBounds(90, 110, 30, 30);
+
+        txtNomeAluno1.setEditable(false);
+        txtNomeAluno1.setEnabled(false);
+        jPanel3.add(txtNomeAluno1);
+        txtNomeAluno1.setBounds(130, 110, 260, 22);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -354,7 +366,7 @@ public class CursoCadastro extends InternalFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -424,20 +436,37 @@ public class CursoCadastro extends InternalFrame {
         }
     }//GEN-LAST:event_btnLimparActionPerformed
 
+    private void btnConsultarAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarAlunoActionPerformed
+        try {
+            txtCodAluno.setText("");
+            txtNomeAluno.setText("");
+
+            AlunoConsulta form = new AlunoConsulta(mainFrame, txtCodAluno, txtNomeAluno);
+            form.consultar();
+            form.setVisible(true);
+
+        } catch (ValidacaoException e) {
+            Mensagem.exibirAlerta(this, e);
+        } catch (Exception e) {
+            Mensagem.exibirErro(this, e);
+        }
+    }//GEN-LAST:event_btnConsultarAlunoActionPerformed
+
+    private void btnConsultarAluno1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarAluno1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnConsultarAluno1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnConsultarAluno;
+    private javax.swing.JButton btnConsultarAluno1;
     private javax.swing.JButton btnLimpar;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnRemover;
     private javax.swing.JButton btnSair;
     private javax.swing.JButton btnSalvar;
-    private vrcurso.framework.view.ComboBox cboPeriodo;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -445,10 +474,9 @@ public class CursoCadastro extends InternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblDados;
     private vrcurso.framework.view.ToolBarPadrao toolbar;
-    private javax.swing.JTextField txtCargaHoraria;
-    private javax.swing.JTextField txtCodigo;
-    private javax.swing.JTextField txtDescricao;
-    private javax.swing.JTextField txtDuracao;
-    private javax.swing.JTextField txtQtdeAlunos;
+    private javax.swing.JTextField txtCodAluno;
+    private javax.swing.JTextField txtCodAluno1;
+    private javax.swing.JTextField txtNomeAluno;
+    private javax.swing.JTextField txtNomeAluno1;
     // End of variables declaration//GEN-END:variables
 }

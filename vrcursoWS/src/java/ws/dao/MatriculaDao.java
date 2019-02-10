@@ -66,7 +66,7 @@ public class MatriculaDao implements IDao {
     public Matricula carregar(MatriculaFiltroVO i_matriculaFiltro) throws Exception {
         Statement stm = Conexao.getStatement();
         ResultSet rst;
-        
+
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT m.id, m.id_aluno, m.id_curso");
         sql.append(", a.matricula, a.nome AS aluno, c.descricao AS curso, c.periodo FROM matricula m");
@@ -89,7 +89,7 @@ public class MatriculaDao implements IDao {
         oMatricula.setCurso(rst.getString("curso"));
         oMatricula.setPeriodo(rst.getInt("periodo"));
         oMatricula.setQtdDisciplinas(rst.getInt("qtddisciplinas"));
-        
+
         sql = new StringBuilder();
         sql.append("SELECT md.id, md.id_disciplina, md.id_matricula");
         sql.append(", d.descricao AS disciplina, d.diasemana, p.nome AS professor");
@@ -97,10 +97,10 @@ public class MatriculaDao implements IDao {
         sql.append(" INNER JOIN disciplina d ON d.id = md.id_disciplina");
         sql.append(" INNER JOIN professor p ON p.id = d.id_professor");
         sql.append(" WHERE md.id_matricula = " + i_matriculaFiltro.getId());
-        
+
         rst = stm.executeQuery(sql.toString());
-        
-        while(rst.next()){
+
+        while (rst.next()) {
             MatriculaDisciplina oMatriculaDisciplina = new MatriculaDisciplina();
             oMatriculaDisciplina.setId(rst.getInt("id"));
             oMatriculaDisciplina.setIdDisciplina(rst.getInt("id_disciplina"));
@@ -108,10 +108,9 @@ public class MatriculaDao implements IDao {
             oMatriculaDisciplina.setDisciplina(rst.getString("disciplina"));
             oMatriculaDisciplina.setDiaSemana(rst.getInt("diasemana"));
             oMatriculaDisciplina.setDisciplina(rst.getString("disciplina"));
-            
+
             oMatricula.getvMatriculaDisciplina().add(oMatriculaDisciplina);
         }
-        
 
         return oMatricula;
     }
@@ -132,7 +131,7 @@ public class MatriculaDao implements IDao {
         if (i_matricula.getId() == 0) {
 
             sql.append("INSERT INTO matricula(id_aluno, id_curso)");
-            sql.append(" VALUES (" + i_matricula.getIdAluno()+ "," + i_matricula.getIdCurso() + ");");
+            sql.append(" VALUES (" + i_matricula.getIdAluno() + "," + i_matricula.getIdCurso() + ");");
 
             stm.execute(sql.toString());
 
@@ -158,19 +157,10 @@ public class MatriculaDao implements IDao {
         } else {
 
             sql.append("UPDATE matricula");
-            sql.append(" SET id_aluno = " + i_matricula.getIdAluno()+ ", id_curso = " + i_matricula.getIdCurso());
+            sql.append(" SET id_aluno = " + i_matricula.getIdAluno() + ", id_curso = " + i_matricula.getIdCurso());
             sql.append(" WHERE id = " + i_matricula.getId());
 
             stm.executeUpdate(sql.toString());
-
-            for (MatriculaDisciplina oMatriculaDisciplina : i_matricula.getvMatriculaDisciplina()) {
-                sql = new StringBuilder();
-                sql.append("UPDATE matriculadisciplina SET id_matricula = " + i_matricula.getId());
-                sql.append(", id_disciplina = " + oMatriculaDisciplina.getIdDisciplina());
-                sql.append(" WHERE id = " + oMatriculaDisciplina.getId());
-
-                stm.executeUpdate(sql.toString());
-            }
 
             for (MatriculaDisciplina oMatriculaDisciplinaEx : i_matricula.getvMatriculaDisciplinaExclusao()) {
                 sql = new StringBuilder();
@@ -178,7 +168,30 @@ public class MatriculaDao implements IDao {
 
                 stm.executeUpdate(sql.toString());
             }
-            
+
+            for (MatriculaDisciplina oMatriculaDisciplina : i_matricula.getvMatriculaDisciplina()) {
+                if (oMatriculaDisciplina.getId() == 0) {
+                    sql = new StringBuilder();
+                    sql.append("INSERT INTO matriculadisciplina(id_matricula, id_disciplina)");
+                    sql.append(" VALUES(" + i_matricula.getId() + ", " + oMatriculaDisciplina.getIdDisciplina() + ")");
+
+                    stm.execute(sql.toString());
+
+                    rst = stm.executeQuery("select currval('cursodisciplina_id_seq')");
+                    rst.next();
+
+                    oMatriculaDisciplina.setId(rst.getInt(1));
+                    oMatriculaDisciplina.setIdMatricula(i_matricula.getId());
+                } else {
+                    sql = new StringBuilder();
+                    sql.append("UPDATE matriculadisciplina SET id_matricula = " + i_matricula.getId());
+                    sql.append(", id_disciplina = " + oMatriculaDisciplina.getIdDisciplina());
+                    sql.append(" WHERE id = " + oMatriculaDisciplina.getId());
+
+                    stm.executeUpdate(sql.toString());
+                }
+            }
+
             i_matricula.setvMatriculaDisciplinaExclusao(new ArrayList<>());
         }
 
@@ -188,7 +201,57 @@ public class MatriculaDao implements IDao {
     @Override
     public void validar(Object o) throws Exception {
         Matricula oMatricula = (Matricula) o;
+        ResultSet rst;
+        Statement stm = Conexao.getStatement();
+        StringBuilder sql;
+        
+        //O curso deverá respeitar a quantidade máxima de alunos; 
+        
+        if(oMatricula.getId() == 0){
+            sql = new StringBuilder();
+            sql.append("SELECT qtdalunos FROM curso WHERE id = " + oMatricula.getIdCurso());
+            rst = stm.executeQuery(sql.toString());
+            rst.next();
+            int qtdmaxima = rst.getInt("qtdalunos");
+            
+            sql = new StringBuilder();
+            sql.append("SELECT count(1) FROM matricula WHERE id_curso = " + oMatricula.getIdCurso());
+            rst = stm.executeQuery(sql.toString());
+            rst.next();
+            if((rst.getInt(1)) >= qtdmaxima){
+                throw new ValidacaoException("Curso com todas as vagas preenchidas!");
+            }
+            
+        }
 
+        //Cada aluno poderá se matricular em um ou mais disciplinas, desde que o período (matutino, vespertino, noturno e integral) não coincidam; 
+        sql = new StringBuilder();
+        sql.append("SELECT id FROM matricula");
+        sql.append(" WHERE id != " + oMatricula.getId());
+        sql.append(" WHERE id_aluno = " + oMatricula.getIdAluno());
+        sql.append(" AND m.id_curso = " + oMatricula.getIdCurso());
+        rst = stm.executeQuery(sql.toString());
+
+        if (rst.next()) {
+            throw new ValidacaoException("Aluno já matriculado neste curso!");
+        }
+
+        for (MatriculaDisciplina oMatriculaDisciplina : oMatricula.getvMatriculaDisciplina()) {
+            sql = new StringBuilder();
+            sql.append("SELECT id FROM matriculadisciplina md");
+            sql.append(" INNER JOIN matricula m ON m.id = md.id_matricula");
+            sql.append(" INNER JOIN curso c ON c.id = m.id_curso");
+            sql.append(" INNER JOIN disciplina d ON d.id = md.id_disciplina");
+            sql.append(" WHERE md.id_matricula != " + oMatricula.getId());
+            sql.append(" AND c.periodo = " + oMatricula.getPeriodo());
+            sql.append(" AND d.diasemana = " + oMatriculaDisciplina.getDiaSemana());
+            rst = stm.executeQuery(sql.toString());
+
+            if (rst.next()) {
+                throw new ValidacaoException("Aluno já possui uma matricula no dia e período da disciplina "+ oMatriculaDisciplina.getDisciplina() +"!");
+            }
+
+        }
     }
 
     @Override

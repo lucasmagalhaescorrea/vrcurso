@@ -70,9 +70,9 @@ public class CursoConsulta extends InternalFrame {
 
         Curso oCurso = vCurso.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow()));
 
-//        ProfessorCadastro form = new ProfessorCadastro(mainFrame);
-//        form.carregarProfessor(oCurso.getId());
-//        form.setVisible(true);
+        CursoCadastro form = new CursoCadastro(mainFrame);
+        form.carregarCurso(oCurso.getId());
+        form.setVisible(true);
     }
 
     @Override
@@ -92,10 +92,9 @@ public class CursoConsulta extends InternalFrame {
 
     @Override
     public void novo() throws Exception {
-
-//        ProfessorCadastro form = new ProfessorCadastro(mainFrame);
-//        form.novo();
-//        form.setVisible(true);
+        CursoCadastro form = new CursoCadastro(mainFrame);
+        form.novo();
+        form.setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -114,7 +113,7 @@ public class CursoConsulta extends InternalFrame {
         btnConsultar = new javax.swing.JButton();
 
         setClosable(true);
-        setTitle("VR Cursos - Professor");
+        setTitle("VR Cursos - Curso");
 
         toolbar.setConsultarVisible(true);
         toolbar.setNovoVisible(true);

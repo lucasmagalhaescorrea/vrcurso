@@ -37,7 +37,7 @@ public class DisciplinaConsulta extends InternalFrame {
         setSelected(true);
     }
 
-    public DisciplinaConsulta(JFrame i_principal, JTextField i_cursoCadastro) throws Exception {
+    public DisciplinaConsulta(JFrame i_principal, CursoCadastro i_cursoCadastro) throws Exception {
         initComponents();
         mainFrame = i_principal;
         
@@ -253,8 +253,13 @@ public class DisciplinaConsulta extends InternalFrame {
         try {
             if (evt.getClickCount() == 2) {
                 if (isConsulta) {
-                    txtCampoCod.setText(String.valueOf(vDisciplina.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow())).getId()));
-                    txtCampoDesc.setText(String.valueOf(vDisciplina.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow())).getDescricao()));
+                    if (cursoCadastro != null) {
+                        cursoCadastro.addDisciplina(vDisciplina.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow())));
+                    } else {
+                        txtCampoCod.setText(String.valueOf(vDisciplina.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow())).getId()));
+                        txtCampoDesc.setText(String.valueOf(vDisciplina.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow())).getDescricao()));
+                    }
+                    
                     dispose();
                 } else {
                     editar();

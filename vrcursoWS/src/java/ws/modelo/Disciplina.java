@@ -10,7 +10,6 @@ public class Disciplina {
     private String professor;
     private int diaSemana;
     private int cargaHoraria;
-    private int periodo;
 
     public int getId() {
         return id;
@@ -66,14 +65,6 @@ public class Disciplina {
 
     public void setCargaHoraria(int cargaHoraria) {
         this.cargaHoraria = cargaHoraria;
-    }
-
-    public int getPeriodo() {
-        return periodo;
-    }
-
-    public void setPeriodo(int periodo) {
-        this.periodo = periodo;
     }
 
     public String getProfessor() {
