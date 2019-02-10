@@ -97,6 +97,8 @@ public class CursoCadastro extends InternalFrame {
                 oCurso.getvCursoDisciplinaExclusao().add(oCursoDisciplina);
             }
         }
+        
+        oCurso.getvCursoDisciplina().clear();
 
         configurarTabela();
     }

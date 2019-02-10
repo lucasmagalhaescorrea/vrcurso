@@ -12,8 +12,10 @@ import vrcurso.modelo.Curso;
 import vrcurso.modelo.CursoDisciplina;
 import vrcurso.modelo.Disciplina;
 import vrcurso.modelo.Matricula;
+import vrcurso.modelo.MatriculaDisciplina;
 import vrcurso.modelo.enuns.Periodo;
 import vrcurso.service.CursoService;
+import vrcurso.service.MatriculaService;
 import vrcurso.view.tablemodel.CursoDisciplinaTableModel;
 import vrcurso.vo.CursoFiltroVO;
 
@@ -30,117 +32,58 @@ public class MatriculaCadastro extends InternalFrame {
 
         toolbar.setInternalFrame(this);
 
-        ArrayList vItemCombo = new ArrayList();
-
-        vItemCombo.add(new ItemComboBoxVO(Periodo.MATUTINO.getId(), Periodo.MATUTINO.getDescricao()));
-        vItemCombo.add(new ItemComboBoxVO(Periodo.VESPERTINO.getId(), Periodo.VESPERTINO.getDescricao()));
-        vItemCombo.add(new ItemComboBoxVO(Periodo.NOTURNO.getId(), Periodo.NOTURNO.getDescricao()));
-        vItemCombo.add(new ItemComboBoxVO(Periodo.INTEGRAL.getId(), Periodo.INTEGRAL.getDescricao()));
-        cboPeriodo.setModel(vItemCombo);
-
         setSelected(true);
     }
 
-    public void addDisciplina(Disciplina i_Disciplina) {
-        CursoDisciplina oCursoDisciplina = new CursoDisciplina();
-        oCursoDisciplina.setDiaSemana(i_Disciplina.getDiaSemana());
-        oCursoDisciplina.setDisciplina(i_Disciplina.getDescricao());
-        oCursoDisciplina.setIdDisciplina(i_Disciplina.getId());
-        oCursoDisciplina.setProfessor(i_Disciplina.getProfessor());
-        oCursoDisciplina.setCargahoraria(i_Disciplina.getCargaHoraria());
-        oCursoDisciplina.setIdProfessor(i_Disciplina.getIdProfessor());
+    public void addDisciplina(CursoDisciplina i_cursoDisciplina) {
+        MatriculaDisciplina oMatriculaDisciplina = new MatriculaDisciplina();
+        oMatriculaDisciplina.setDiaSemana(i_cursoDisciplina.getDiaSemana());
+        oMatriculaDisciplina.setDisciplina(i_cursoDisciplina.getDisciplina());
+        oMatriculaDisciplina.setIdDisciplina(i_cursoDisciplina.getId());
+        oMatriculaDisciplina.setProfessor(i_cursoDisciplina.getProfessor());
 
-        oMatricula.getvCursoDisciplina().add(oCursoDisciplina);
+        oMatricula.getvMatriculaDisciplina().add(oMatriculaDisciplina);
 
         configurarTabela();
     }
 
     private void configurarTabela() {
-        tblDados.setModel(new CursoDisciplinaTableModel(oMatricula.getvCursoDisciplina()));
-
-        int[] tamCol = new int[6];
-        tamCol[0] = 100;
-        tamCol[1] = 200;
-        tamCol[2] = 100;
-        tamCol[3] = 200;
-        tamCol[4] = 100;
-        tamCol[5] = 100;
-
-        for (int i = 0; i < tblDados.getModel().getColumnCount(); i++) {
-            tblDados.getColumnModel().getColumn(i).setMinWidth(tamCol[i]);
-            tblDados.getColumnModel().getColumn(i).setWidth(tamCol[i]);
-            tblDados.getColumnModel().getColumn(i).setPreferredWidth(tamCol[i]);
-        }
-
+       
         tblDados.requestFocus();
     }
 
     private void removerDisciplinas() throws ValidacaoException {
-        if (tblDados.getSelectedRow() == -1) {
-            throw new ValidacaoException(MensagensPadrao.NENHUM_REGISTRO_SELECIONADO);
-        }
-
-        CursoDisciplina oCursoDisciplina = oMatricula.getvCursoDisciplina().get(tblDados.convertRowIndexToModel(tblDados.getSelectedRow()));
-
-        if (oCursoDisciplina.getId() > 0) {
-            oMatricula.getvCursoDisciplinaExclusao().add(oCursoDisciplina);
-        }
-
-        oMatricula.getvCursoDisciplina().remove(oCursoDisciplina);
+        
 
         configurarTabela();
     }
 
     private void limparDisciplinas() throws ValidacaoException {
 
-        for (CursoDisciplina oCursoDisciplina : oMatricula.getvCursoDisciplina()) {
-            if (oCursoDisciplina.getId() > 0) {
-                oMatricula.getvCursoDisciplinaExclusao().add(oCursoDisciplina);
-            }
-        }
-
-        configurarTabela();
+       
     }
 
     @Override
     public void salvar() throws Exception {
-        oMatricula.setDescricao(txtDescricao.getText());
-        oMatricula.setDuracaoMeses(Integer.parseInt(txtDuracao.getText()));
-        oMatricula.setQtdAlunos(Integer.parseInt(txtQtdeAlunos.getText()));
-        oMatricula.setPeriodo(cboPeriodo.getId());
-        oMatricula.setCargaHoraria(Integer.parseInt(txtCargaHoraria.getText()));
 
-        oMatricula = new CursoService().salvar(oMatricula);
+        oMatricula = new MatriculaService().salvar(oMatricula);
 
-        carregarCurso(oMatricula.getId());
+        carregarMatricula(oMatricula.getId());
 
         Mensagem.exibirMensagem(this, MensagensPadrao.REGISTRO_SALVO_SUCESSO);
     }
 
     @Override
     public void novo() throws Exception {
-        oMatricula = new Curso();
-        txtCodigo.setText("");
-        txtDescricao.setText("");
-        txtDuracao.setText("");
-        txtQtdeAlunos.setText("");
-        txtCargaHoraria.setText("");
-        cboPeriodo.setId(1);
+        
     }
 
-    public void carregarCurso(int i_id) throws Exception {
+    public void carregarMatricula(int i_id) throws Exception {
 
         CursoFiltroVO oFiltro = new CursoFiltroVO();
         oFiltro.setId(String.valueOf(i_id));
 
-        oMatricula = new CursoService().carregar(oFiltro);
-        txtCodigo.setText(Format.number(oMatricula.getId(), 6));
-        txtDescricao.setText(oMatricula.getDescricao());
-        txtDuracao.setText(String.valueOf(oMatricula.getDuracaoMeses()));
-        txtQtdeAlunos.setText(String.valueOf(oMatricula.getQtdAlunos()));
-        txtCargaHoraria.setText(String.valueOf(oMatricula.getCargaHoraria()));
-        cboPeriodo.setId(oMatricula.getPeriodo());
-
+       
         configurarTabela();
     }
 
@@ -164,10 +107,10 @@ public class MatriculaCadastro extends InternalFrame {
         jLabel6 = new javax.swing.JLabel();
         btnConsultarAluno = new javax.swing.JButton();
         txtNomeAluno = new javax.swing.JTextField();
-        txtCodAluno1 = new javax.swing.JTextField();
+        txtCodCurso = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        btnConsultarAluno1 = new javax.swing.JButton();
-        txtNomeAluno1 = new javax.swing.JTextField();
+        btnConsultarCurso = new javax.swing.JButton();
+        txtDescricaoCurso = new javax.swing.JTextField();
 
         setClosable(true);
         setTitle("VR Cursos - Matrícula");
@@ -325,32 +268,32 @@ public class MatriculaCadastro extends InternalFrame {
         jPanel3.add(txtNomeAluno);
         txtNomeAluno.setBounds(130, 50, 260, 22);
 
-        txtCodAluno1.setEditable(false);
-        txtCodAluno1.setEnabled(false);
-        jPanel3.add(txtCodAluno1);
-        txtCodAluno1.setBounds(10, 110, 70, 22);
+        txtCodCurso.setEditable(false);
+        txtCodCurso.setEnabled(false);
+        jPanel3.add(txtCodCurso);
+        txtCodCurso.setBounds(10, 110, 70, 22);
 
         jLabel8.setText("Curso");
         jPanel3.add(jLabel8);
         jLabel8.setBounds(10, 90, 90, 16);
 
-        btnConsultarAluno1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnConsultar.png"))); // NOI18N
-        btnConsultarAluno1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnConsultarAluno1.setContentAreaFilled(false);
-        btnConsultarAluno1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnConsultarAluno1.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        btnConsultarAluno1.addActionListener(new java.awt.event.ActionListener() {
+        btnConsultarCurso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnConsultar.png"))); // NOI18N
+        btnConsultarCurso.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnConsultarCurso.setContentAreaFilled(false);
+        btnConsultarCurso.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnConsultarCurso.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btnConsultarCurso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConsultarAluno1ActionPerformed(evt);
+                btnConsultarCursoActionPerformed(evt);
             }
         });
-        jPanel3.add(btnConsultarAluno1);
-        btnConsultarAluno1.setBounds(90, 110, 30, 30);
+        jPanel3.add(btnConsultarCurso);
+        btnConsultarCurso.setBounds(90, 110, 30, 30);
 
-        txtNomeAluno1.setEditable(false);
-        txtNomeAluno1.setEnabled(false);
-        jPanel3.add(txtNomeAluno1);
-        txtNomeAluno1.setBounds(130, 110, 260, 22);
+        txtDescricaoCurso.setEditable(false);
+        txtDescricaoCurso.setEnabled(false);
+        jPanel3.add(txtDescricaoCurso);
+        txtDescricaoCurso.setBounds(130, 110, 260, 22);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -405,15 +348,7 @@ public class MatriculaCadastro extends InternalFrame {
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        try {
-            DisciplinaConsulta form = new DisciplinaConsulta(mainFrame, this);
-            form.consultar();
-            form.setVisible(true);
-        } catch (ValidacaoException e) {
-            Mensagem.exibirAlerta(this, e);
-        } catch (Exception e) {
-            Mensagem.exibirErro(this, e);
-        }
+        
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
@@ -452,14 +387,14 @@ public class MatriculaCadastro extends InternalFrame {
         }
     }//GEN-LAST:event_btnConsultarAlunoActionPerformed
 
-    private void btnConsultarAluno1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarAluno1ActionPerformed
+    private void btnConsultarCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarCursoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnConsultarAluno1ActionPerformed
+    }//GEN-LAST:event_btnConsultarCursoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConsultarAluno;
-    private javax.swing.JButton btnConsultarAluno1;
+    private javax.swing.JButton btnConsultarCurso;
     private javax.swing.JButton btnLimpar;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnRemover;
@@ -475,8 +410,8 @@ public class MatriculaCadastro extends InternalFrame {
     private javax.swing.JTable tblDados;
     private vrcurso.framework.view.ToolBarPadrao toolbar;
     private javax.swing.JTextField txtCodAluno;
-    private javax.swing.JTextField txtCodAluno1;
+    private javax.swing.JTextField txtCodCurso;
+    private javax.swing.JTextField txtDescricaoCurso;
     private javax.swing.JTextField txtNomeAluno;
-    private javax.swing.JTextField txtNomeAluno1;
     // End of variables declaration//GEN-END:variables
 }
