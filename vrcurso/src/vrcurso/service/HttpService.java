@@ -70,6 +70,19 @@ public class HttpService {
         public static String PROFESSOR_CONSULTAR = "http://localhost:8080/vrcursoWS/webresources/professor/consultar";
         public static String PROFESSOR_SALVAR = "http://localhost:8080/vrcursoWS/webresources/professor/salvar";
         public static String PROFESSOR_REMOVER = "http://localhost:8080/vrcursoWS/webresources/professor/remover";
+        
+        public static String ALUNO_CONSULTAR = "http://localhost:8080/vrcursoWS/webresources/aluno/consultar";
+        public static String ALUNO_SALVAR = "http://localhost:8080/vrcursoWS/webresources/aluno/salvar";
+        public static String ALUNO_REMOVER = "http://localhost:8080/vrcursoWS/webresources/aluno/remover";
+        
+        public static String DISCIPLINA_CONSULTAR = "http://localhost:8080/vrcursoWS/webresources/disciplina/consultar";
+        public static String DISCIPLINA_SALVAR = "http://localhost:8080/vrcursoWS/webresources/disciplina/salvar";
+        public static String DISCIPLINA_REMOVER = "http://localhost:8080/vrcursoWS/webresources/disciplina/remover";
+        
+        public static String CURSO_CONSULTAR = "http://localhost:8080/vrcursoWS/webresources/curso/consultar";
+        public static String CURSO_CARREGAR = "http://localhost:8080/vrcursoWS/webresources/curso/carregar";
+        public static String CURSO_SALVAR = "http://localhost:8080/vrcursoWS/webresources/curso/salvar";
+        public static String CURSO_REMOVER = "http://localhost:8080/vrcursoWS/webresources/curso/remover";
     }
 
 }

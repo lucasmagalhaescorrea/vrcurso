@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ws;
 
 import com.google.gson.Gson;
@@ -10,22 +5,22 @@ import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.Path;
 import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import vrcurso.framework.exception.ValidacaoException;
-import ws.dao.ProfessorDao;
-import ws.modelo.Professor;
-import ws.vo.ProfessorFiltroVO;
+import ws.dao.AlunoDao;
+import ws.modelo.Aluno;
+import ws.vo.AlunoFiltroVO;
 
 
-@Path("professor")
-public class ProfessorResource {
+@Path("aluno")
+public class AlunoResource {
 
     @Context
     private UriInfo context;
-
-    public ProfessorResource() {
+    
+    public AlunoResource() {
     }
 
     @POST
@@ -34,13 +29,13 @@ public class ProfessorResource {
     public String remover(String content) {
         try {
 
-            ProfessorDao oProfessorDao = new ProfessorDao();
+            AlunoDao oAlunoDao = new AlunoDao();
 
-            Professor oProfessor = new Gson().fromJson(content, Professor.class);
+            Aluno oAluno = new Gson().fromJson(content, Aluno.class);
 
-            oProfessorDao.validarReferencias(oProfessor);
+            oAlunoDao.validarReferencias(oAluno);
             
-            oProfessorDao.remover(oProfessor);
+            oAlunoDao.remover(oAluno);
             
         } catch (ValidacaoException e) {
             return "|ALERTA|" + e.getMessage();
@@ -57,15 +52,15 @@ public class ProfessorResource {
     public String salvar(String content) {
         try {
 
-            ProfessorDao oProfessorDao = new ProfessorDao();
+            AlunoDao oAlunoDao = new AlunoDao();
 
-            Professor oProfessor = new Gson().fromJson(content, Professor.class);
+            Aluno oAluno = new Gson().fromJson(content, Aluno.class);
 
-            oProfessorDao.validar(oProfessor);
+            oAlunoDao.validar(oAluno);
 
-            oProfessorDao.salvar(oProfessor);
+            oAlunoDao.salvar(oAluno);
             
-            return new Gson().toJson(oProfessor);
+            return new Gson().toJson(oAluno);
         } catch (ValidacaoException e) {
             return "|ALERTA|" + e.getMessage();
         } catch (Exception e) {
@@ -79,13 +74,13 @@ public class ProfessorResource {
     public String consultar(String content) {
 
         try {
-            ProfessorDao oProfessorDao = new ProfessorDao();
+            AlunoDao oAlunoDao= new AlunoDao();
 
-            ProfessorFiltroVO oProfessorFiltro = new Gson().fromJson(content, ProfessorFiltroVO.class);
+            AlunoFiltroVO oAlunoFiltro = new Gson().fromJson(content, AlunoFiltroVO.class);
 
-            List<Professor> vProfessor = oProfessorDao.consultar(oProfessorFiltro);
+            List<Aluno> vAluno = oAlunoDao.consultar(oAlunoFiltro);
 
-            return new Gson().toJson(vProfessor);
+            return new Gson().toJson(vAluno);
         } catch (ValidacaoException e) {
             return "|ALERTA|" + e.getMessage();
         } catch (Exception e) {
