@@ -9,18 +9,22 @@ import vrcurso.vo.ProfessorFiltroVO;
 
 public class ProfessorService extends HttpService {
 
-    public List<ProfessorFiltroVO> consultar(ProfessorFiltroVO i_professorFiltro) throws Exception {
+    public List<Professor> consultar(ProfessorFiltroVO i_professorFiltro) throws Exception {
 
         Type professorType = new TypeToken<ProfessorFiltroVO>() {
         }.getType();
-
-        String response = sendPost("http://localhost:8080/vrcursoWS/webresources/professor/consultar", new Gson().toJson(i_professorFiltro, professorType));
         
-        validarRetorno(response);
-        
-        List<ProfessorFiltroVO> vProfessor = new Gson().fromJson(response, List.class);
+        List<Professor> vProfessor = new Gson().fromJson(consumirWebService(EndPoints.PROFESSOR_CONSULTAR, new Gson().toJson(i_professorFiltro, professorType)), List.class);
 
         return vProfessor;
+    }
+    
+    public void remover(Professor i_professor) throws Exception{
+         Type professorType = new TypeToken<Professor>() {
+        }.getType();
+        
+        consumirWebService(EndPoints.PROFESSOR_REMOVER, new Gson().toJson(i_professor, professorType));
+    
     }
     
     
@@ -28,12 +32,8 @@ public class ProfessorService extends HttpService {
 
         Type professorType = new TypeToken<Professor>() {
         }.getType();
-
-        String response = sendPost("http://localhost:8080/vrcursoWS/webresources/professor/consultar", new Gson().toJson(i_professor, professorType));
         
-        validarRetorno(response);
-        
-        List<ProfessorFiltroVO> vProfessor = new Gson().fromJson(response, List.class);
+        consumirWebService(EndPoints.PROFESSOR_SALVAR, new Gson().toJson(i_professor, professorType));
     }
 
 }

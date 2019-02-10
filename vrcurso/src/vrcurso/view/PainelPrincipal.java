@@ -1,5 +1,10 @@
 package vrcurso.view;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 public class PainelPrincipal extends javax.swing.JFrame {
     
     private ProfessorConsulta formProfessorConsulta;
@@ -103,6 +108,12 @@ public class PainelPrincipal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (Exception ex) {
+                    System.out.println("ERRO LOOK AND FEEL");
+                }
+                
                 new PainelPrincipal().setVisible(true);
             }
         });

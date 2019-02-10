@@ -7,6 +7,7 @@ public class Disciplina {
     private String ementa;
     private int limiteVagas;
     private int idProfessor;
+    private String professor;
     private int diaSemana;
     private int cargaHoraria;
     private int periodo;
@@ -74,7 +75,13 @@ public class Disciplina {
     public void setPeriodo(int periodo) {
         this.periodo = periodo;
     }
-    
-    
+
+    public String getProfessor() {
+        return professor;
+    }
+
+    public void setProfessor(String professor) {
+        this.professor = professor;
+    }    
     
 }

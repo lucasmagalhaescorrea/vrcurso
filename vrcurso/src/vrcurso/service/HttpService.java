@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package vrcurso.service;
 
 import java.io.ByteArrayOutputStream;
@@ -13,13 +8,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import vrcurso.framework.exception.ValidacaoException;
 
-/**
- *
- * @author Lucas
- */
 public class HttpService {
 
-    protected void validarRetorno(String i_response) throws Exception {
+    protected String consumirWebService(String i_url, String i_json) throws Exception {
+
+        String response = sendPost(i_url, i_json);
+
+        validarRetorno(response);
+
+        return response;
+    }
+
+    private void validarRetorno(String i_response) throws Exception {
         if (i_response.contains("|ERRO|")) {
             throw new Exception(i_response.replace("|ERRO|", ""));
         }
@@ -29,7 +29,7 @@ public class HttpService {
         }
     }
 
-    protected String sendPost(String url, String json) throws Exception {
+    private String sendPost(String url, String json) throws Exception {
         // Cria um objeto HttpURLConnection:
         HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
 
@@ -53,30 +53,6 @@ public class HttpService {
         }
     }
 
-    protected String sendGet(String url) throws Exception {
-        // Cria um objeto HttpURLConnection:
-        HttpURLConnection request = (HttpURLConnection) new URL(url).openConnection();
-
-        try {
-            // Define que a conexão pode enviar informações e obtê-las de volta:
-            request.setDoOutput(true);
-            request.setDoInput(true);
-
-            // Define o content-type:
-            request.setRequestProperty("Content-Type", "application/json");
-
-            // Define o método da requisição:
-            request.setRequestMethod("GET");
-
-            // Conecta na URL:
-            request.connect();
-
-            return readResponse(request);
-        } finally {
-            request.disconnect();
-        }
-    }
-
     private String readResponse(HttpURLConnection request) throws IOException {
         ByteArrayOutputStream os;
         try (InputStream is = request.getInputStream()) {
@@ -87,6 +63,13 @@ public class HttpService {
             }
         }
         return new String(os.toByteArray());
+    }
+    
+    protected static class EndPoints {
+        
+        public static String PROFESSOR_CONSULTAR = "http://localhost:8080/vrcursoWS/webresources/professor/consultar";
+        public static String PROFESSOR_SALVAR = "http://localhost:8080/vrcursoWS/webresources/professor/salvar";
+        public static String PROFESSOR_REMOVER = "http://localhost:8080/vrcursoWS/webresources/professor/remover";
     }
 
 }

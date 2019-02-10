@@ -6,8 +6,7 @@ public class ProfessorFiltroVO {
    private String id = "";
    private String nome = "";
    private String cpf = "";
-   private String titulo = "";
-
+   
     public String getId() {
         return id;
     }
@@ -30,15 +29,6 @@ public class ProfessorFiltroVO {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-   
+    } 
    
 }

@@ -20,10 +20,10 @@ public class ToolBarPadrao extends javax.swing.JPanel {
     private boolean novoVisible = false;
     private boolean removerVisible = false;
     private boolean salvarVisible = false;
-    private boolean carregarVisible = false;
-    
+    private boolean editarVisible = false;
+
     private InternalFrame internalFrame;
-   
+
     public ToolBarPadrao() {
         initComponents();
 
@@ -34,7 +34,7 @@ public class ToolBarPadrao extends javax.swing.JPanel {
                 btnNovo.setVisible(isNovoVisible());
                 btnRemover.setVisible(isRemoverVisible());
                 btnSalvar.setVisible(isSalvarVisible());
-                btnCarregar.setVisible(isCarregarVisible());
+                btnEditar.setVisible(isEditarVisible());
 
                 organizarBotoes();
                 revalidate();
@@ -55,7 +55,7 @@ public class ToolBarPadrao extends javax.swing.JPanel {
         btnNovo = new javax.swing.JButton();
         btnRemover = new javax.swing.JButton();
         btnSalvar = new javax.swing.JButton();
-        btnCarregar = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -65,6 +65,7 @@ public class ToolBarPadrao extends javax.swing.JPanel {
         btnConsultar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnConsultar.png"))); // NOI18N
         btnConsultar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnConsultar.setContentAreaFilled(false);
+        btnConsultar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnConsultar.setMargin(new java.awt.Insets(2, 2, 2, 2));
         btnConsultar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -77,30 +78,54 @@ public class ToolBarPadrao extends javax.swing.JPanel {
         btnNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnAdicionar.png"))); // NOI18N
         btnNovo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnNovo.setContentAreaFilled(false);
+        btnNovo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnNovo.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btnNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNovoActionPerformed(evt);
+            }
+        });
         add(btnNovo);
         btnNovo.setBounds(40, 5, 30, 30);
 
         btnRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnRemover.png"))); // NOI18N
         btnRemover.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnRemover.setContentAreaFilled(false);
+        btnRemover.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnRemover.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btnRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoverActionPerformed(evt);
+            }
+        });
         add(btnRemover);
         btnRemover.setBounds(75, 5, 30, 30);
 
         btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnSalvar.png"))); // NOI18N
         btnSalvar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnSalvar.setContentAreaFilled(false);
+        btnSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSalvar.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
         add(btnSalvar);
         btnSalvar.setBounds(110, 5, 30, 30);
 
-        btnCarregar.setText("car");
-        btnCarregar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnCarregar.setContentAreaFilled(false);
-        btnCarregar.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        add(btnCarregar);
-        btnCarregar.setBounds(145, 5, 30, 30);
+        btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnEditar.png"))); // NOI18N
+        btnEditar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnEditar.setContentAreaFilled(false);
+        btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEditar.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+        add(btnEditar);
+        btnEditar.setBounds(145, 5, 30, 30);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
@@ -113,10 +138,49 @@ public class ToolBarPadrao extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnConsultarActionPerformed
 
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
+        try {
+            internalFrame.novo();
+        } catch (ValidacaoException e) {
+            Mensagem.exibirAlerta(internalFrame, e);
+        } catch (Exception e) {
+            Mensagem.exibirErro(internalFrame, e);
+        }
+    }//GEN-LAST:event_btnNovoActionPerformed
+
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
+        try {
+            internalFrame.remover();
+        } catch (ValidacaoException e) {
+            Mensagem.exibirAlerta(internalFrame, e);
+        } catch (Exception e) {
+            Mensagem.exibirErro(internalFrame, e);
+        }
+    }//GEN-LAST:event_btnRemoverActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        try {
+            internalFrame.editar();
+        } catch (ValidacaoException e) {
+            Mensagem.exibirAlerta(internalFrame, e);
+        } catch (Exception e) {
+            Mensagem.exibirErro(internalFrame, e);
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        try {
+            internalFrame.salvar();
+        } catch (ValidacaoException e) {
+            Mensagem.exibirAlerta(internalFrame, e);
+        } catch (Exception e) {
+            Mensagem.exibirErro(internalFrame, e);
+        }
+    }//GEN-LAST:event_btnSalvarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCarregar;
     private javax.swing.JButton btnConsultar;
+    private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnRemover;
     private javax.swing.JButton btnSalvar;
@@ -154,17 +218,17 @@ public class ToolBarPadrao extends javax.swing.JPanel {
         this.salvarVisible = salvarVisible;
     }
 
-    public boolean isCarregarVisible() {
-        return carregarVisible;
+    public boolean isEditarVisible() {
+        return editarVisible;
     }
 
-    public void setCarregarVisible(boolean carregarVisible) {
-        this.carregarVisible = carregarVisible;
+    public void setEditarVisible(boolean editarVisible) {
+        this.editarVisible = editarVisible;
     }
 
     public InternalFrame getInternalFrame() {
         return internalFrame;
-    }   
+    }
 
     public void setInternalFrame(InternalFrame internalFrame) {
         this.internalFrame = internalFrame;
@@ -172,7 +236,7 @@ public class ToolBarPadrao extends javax.swing.JPanel {
 
     private JButton[] getBotoes() {
 
-        return new JButton[]{btnConsultar, btnNovo, btnRemover, btnSalvar, btnCarregar};
+        return new JButton[]{btnConsultar, btnNovo, btnRemover, btnSalvar, btnEditar};
     }
 
     private void organizarBotoes() {

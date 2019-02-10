@@ -1,17 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package vrcurso.framework.view;
 
-/**
- *
- * @author vitor
- */
 public class InternalFrame extends javax.swing.JInternalFrame {
     
     public void consultar() throws Exception {
+    };
+    
+    public void novo() throws Exception {
+    };
+    
+    public void remover() throws Exception {
+    };
+    
+    public void salvar() throws Exception {
+    };
+    
+    public void editar() throws Exception {
     };
 
     /**

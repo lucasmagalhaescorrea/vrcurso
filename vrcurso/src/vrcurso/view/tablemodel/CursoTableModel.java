@@ -4,7 +4,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import vrcurso.framework.Format;
 import vrcurso.modelo.Curso;
-import vrcurso.modelo.Professor;
+import vrcurso.modelo.enuns.Periodo;
 
 public class CursoTableModel extends AbstractTableModel{
     
@@ -44,10 +44,11 @@ public class CursoTableModel extends AbstractTableModel{
             case 2:
                 return String.valueOf(oCurso.getDuracaoMeses()) + (oCurso.getDuracaoMeses() > 1 ? "Meses" : "Mês");
             case 3:
-                return Format.number(oCurso.getQtdAlunos(), 3);
+                return Periodo.getDescricao(oCurso.getPeriodo());
             case 4:
-                return Format.number(oCurso.getCargaHoraria(), 2) + " hs";
+                return Format.number(oCurso.getQtdAlunos(), 3);
             case 5:
+                return Format.number(oCurso.getCargaHoraria(), 2) + " hs";
             default:
                 return "";
         }

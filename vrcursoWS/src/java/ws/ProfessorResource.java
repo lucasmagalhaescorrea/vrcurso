@@ -16,8 +16,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import vrcurso.framework.exception.ValidacaoException;
 import ws.dao.ProfessorDao;
-import ws.framework.exception.ValidacaoException;
 import ws.modelo.Professor;
 import ws.vo.ProfessorFiltroVO;
 
@@ -38,25 +38,27 @@ public class ProfessorResource {
     public ProfessorResource() {
     }
 
-    /**
-     * Retrieves representation of an instance of ws.ProfessorWS
-     *
-     * @return an instance of java.lang.String
-     */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getJson() {
-        return "";
-    }
-
-    /**
-     * PUT method for updating or creating an instance of ProfessorWS
-     *
-     * @param content representation for the resource
-     */
-    @PUT
+    @POST
+    @Path("/remover")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void putJson(String content) {
+    public String remover(String content) {
+        try {
+
+            ProfessorDao oProfessorDao = new ProfessorDao();
+
+            Professor oProfessor = new Gson().fromJson(content, Professor.class);
+
+            oProfessorDao.validarReferencias(oProfessor);
+            
+            oProfessorDao.remover(oProfessor);
+            
+        } catch (ValidacaoException e) {
+            return "|ALERTA|" + e.getMessage();
+        } catch (Exception e) {
+            return "|ERRO|" + e.getMessage();
+        }
+        
+        return "";
     }
 
     @POST
