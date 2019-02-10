@@ -11,6 +11,7 @@ public class Matricula {
     private String aluno;
     private int idCurso;
     private String curso;
+    private int periodo;
     private int qtdDisciplinas;
     private List<MatriculaDisciplina> vMatriculaDisciplina = new ArrayList<>();
     private List<MatriculaDisciplina> vMatriculaDisciplinaExclusao = new ArrayList<>();
@@ -63,6 +64,14 @@ public class Matricula {
         this.curso = curso;
     }
 
+    public int getPeriodo() {
+        return periodo;
+    }
+
+    public void setPeriodo(int periodo) {
+        this.periodo = periodo;
+    }
+
     public List<MatriculaDisciplina> getvMatriculaDisciplina() {
         return vMatriculaDisciplina;
     }
@@ -85,5 +94,5 @@ public class Matricula {
 
     public void setQtdDisciplinas(int qtdDisciplinas) {
         this.qtdDisciplinas = qtdDisciplinas;
-    }    
+    }
 }

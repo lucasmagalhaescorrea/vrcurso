@@ -65,10 +65,7 @@ public class ProfessorDao implements IDao {
 
         Statement stm = Conexao.getStatement();
         
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE FROM professor WHERE id = " + i_professor.getId());
-
-        stm.executeUpdate(sql.toString());
+        stm.executeUpdate("DELETE FROM professor WHERE id = " + i_professor.getId());
     }
 
     public Professor salvar(Professor i_professor) throws Exception {
@@ -83,7 +80,7 @@ public class ProfessorDao implements IDao {
 
             stm.execute(sql.toString());
 
-            rst = Conexao.getStatement().executeQuery("select currval('professor_id_seq')");
+            rst = stm.executeQuery("select currval('professor_id_seq')");
             rst.next();
 
             i_professor.setId(rst.getInt(1));

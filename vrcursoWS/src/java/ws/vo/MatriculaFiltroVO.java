@@ -1,9 +1,18 @@
 package ws.vo;
 
 public class MatriculaFiltroVO {
-    
-    private String idAluno;
-    private String idCurso;
+
+    private String id = "";
+    private String idAluno = "";
+    private String idCurso = "";
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getIdAluno() {
         return idAluno;
@@ -20,5 +29,5 @@ public class MatriculaFiltroVO {
     public void setIdCurso(String idCurso) {
         this.idCurso = idCurso;
     }
-    
+
 }

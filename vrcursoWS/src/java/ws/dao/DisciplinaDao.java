@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import vrcurso.framework.MensagensPadrao;
 import vrcurso.framework.exception.ValidacaoException;
-import ws.modelo.Aluno;
 import ws.modelo.Disciplina;
-import ws.vo.AlunoFiltroVO;
 import ws.vo.DisciplinaFiltroVO;
 
 public class DisciplinaDao implements IDao {
@@ -21,33 +19,34 @@ public class DisciplinaDao implements IDao {
 
         boolean where = false;
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT * FROM disciplina");
+        sql.append("SELECT d.*, p.nome AS professor FROM disciplina d");
+        sql.append(" INNER JOIN professor p ON p.id = d.id_professor");
 
         if (!i_disciplinaFiltro.getId().isEmpty()) {
             sql.append(!where ? " WHERE" : " AND");
-            sql.append(" id = " + i_disciplinaFiltro.getId());
+            sql.append(" d.id = " + i_disciplinaFiltro.getId());
             where = true;
         }
 
         if (!i_disciplinaFiltro.getDescricao().isEmpty()) {
             sql.append(!where ? " WHERE" : " AND");
-            sql.append(" descricao LIKE '%" + i_disciplinaFiltro.getDescricao()+ "%'");
+            sql.append(" d.descricao LIKE '%" + i_disciplinaFiltro.getDescricao() + "%'");
             where = true;
         }
 
         if (!i_disciplinaFiltro.getDiaSemana().isEmpty()) {
             sql.append(!where ? " WHERE" : " AND");
-            sql.append(" diasemana = " + i_disciplinaFiltro.getDiaSemana());
+            sql.append(" d.diasemana = " + i_disciplinaFiltro.getDiaSemana());
             where = true;
         }
 
         if (!i_disciplinaFiltro.getPeriodo().isEmpty()) {
             sql.append(!where ? " WHERE" : " AND");
-            sql.append(" periodo = " + i_disciplinaFiltro.getPeriodo());
+            sql.append(" d.periodo = " + i_disciplinaFiltro.getPeriodo());
             where = true;
         }
 
-        sql.append(" ORDER BY descricao");
+        sql.append(" ORDER BY d.descricao");
 
         rst = stm.executeQuery(sql.toString());
 
@@ -58,7 +57,14 @@ public class DisciplinaDao implements IDao {
         do {
             Disciplina oDisciplina = new Disciplina();
             oDisciplina.setId(rst.getInt("id"));
-            //continuas
+            oDisciplina.setDescricao(rst.getString("descricao"));
+            oDisciplina.setEmenta(rst.getString("ementa"));
+            oDisciplina.setLimiteVagas(rst.getInt("limitevagas"));
+            oDisciplina.setIdProfessor(rst.getInt("id_professor"));
+            oDisciplina.setProfessor(rst.getString("professor"));
+            oDisciplina.setDiaSemana(rst.getInt("diasemana"));
+            oDisciplina.setCargaHoraria(rst.getInt("cargahoraria"));
+            oDisciplina.setPeriodo(rst.getInt("periodo"));
 
             vDisciplina.add(oDisciplina);
         } while (rst.next());
@@ -66,63 +72,66 @@ public class DisciplinaDao implements IDao {
         return vDisciplina;
     }
 
-    public void remover(Aluno i_aluno) throws Exception {
+    public void remover(Disciplina i_disciplina) throws Exception {
 
         Statement stm = Conexao.getStatement();
 
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE FROM aluno WHERE id = " + i_aluno.getId());
-
-        stm.executeUpdate(sql.toString());
+        stm.executeUpdate("DELETE FROM disciplina WHERE id = " + i_disciplina.getId());
     }
 
-    public Aluno salvar(Aluno i_aluno) throws Exception {
+    public Disciplina salvar(Disciplina i_disciplina) throws Exception {
         StringBuilder sql = new StringBuilder();
         Statement stm = Conexao.getStatement();
         ResultSet rst;
 
-        if (i_aluno.getId() == 0) {
+        if (i_disciplina.getId() == 0) {
 
-            sql.append("INSERT INTO aluno(matricula, nome, rg, cpf)");
-            sql.append(" VALUES (" + i_aluno.getMatricula() + ",'" + i_aluno.getNome() + "', '" + i_aluno.getRg() + "', " + i_aluno.getCpf() + ");");
+            sql.append("INSERT INTO disciplina(descricao, ementa, limitevagas, id_professor, diasemana, cargahoraria, periodo)");
+            sql.append(" VALUES ('" + i_disciplina.getDescricao() + "','" + i_disciplina.getEmenta() + "', " + i_disciplina.getLimiteVagas());
+            sql.append(", " + i_disciplina.getIdProfessor() + ", " + i_disciplina.getDiaSemana() + ", " + i_disciplina.getCargaHoraria() + ", " + i_disciplina.getPeriodo() + ");");
 
             stm.execute(sql.toString());
 
-            rst = Conexao.getStatement().executeQuery("select currval('aluno_id_seq')");
+            rst = stm.executeQuery("select currval('disciplina_id_seq')");
             rst.next();
 
-            i_aluno.setId(rst.getInt(1));
+            i_disciplina.setId(rst.getInt(1));
 
         } else {
 
-            sql.append("UPDATE aluno");
-            sql.append(" SET matricula = " + i_aluno.getMatricula() + ", nome = '" + i_aluno.getNome() + "', rg = '" + i_aluno.getRg() + "', cpf = " + i_aluno.getCpf());
-            sql.append(" WHERE id = " + i_aluno.getId());
+            sql.append("UPDATE disciplina");
+            sql.append(" SET descricao = '" + i_disciplina.getDescricao() + "', ementa = '" + i_disciplina.getEmenta() + "', limitevagas = " + i_disciplina.getLimiteVagas());
+            sql.append(" , id_professor = " + i_disciplina.getIdProfessor() + ", diasemana = " + i_disciplina.getDiaSemana());
+            sql.append(" , cargahoraria = " + i_disciplina.getCargaHoraria() + ", periodo = " + i_disciplina.getPeriodo());
+            sql.append(" WHERE id = " + i_disciplina.getId());
 
             stm.executeUpdate(sql.toString());
         }
 
-        return i_aluno;
+        return i_disciplina;
 
     }
 
     @Override
     public void validar(Object o) throws Exception {
-        Aluno oAluno = (Aluno) o;
+        Disciplina oDisciplina = (Disciplina) o;
 
-        
     }
 
     @Override
     public void validarReferencias(Object o) throws Exception {
-        Aluno oAluno = (Aluno) o;
+        Disciplina oDisciplina = (Disciplina) o;
 
         Statement stm = Conexao.getStatement();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT cd.id_curso, c.descricao FROM cursodisciplina cd");
+        sql.append(" INNER JOIN curso c ON c.id = cd.id_curso");
+        sql.append(" WHERE cd.id_disciplina = " + oDisciplina.getId() + " GROUP BY cd.id_curso, c.descricao");
 
-        ResultSet rst = stm.executeQuery("SELECT id FROM matricula WHERE id_aluno = " + oAluno.getId());
+        ResultSet rst = stm.executeQuery(sql.toString());
 
         if (rst.next()) {
-            throw new ValidacaoException("Este aluno não pode ser excluído, pois está matriculado em curso(s) ");
+            throw new ValidacaoException("Esta disciplina não pode ser excluída, pois pertence à grade de disciplinaa do curso '" + rst.getString("descricao") + "'");
         }
     }
 

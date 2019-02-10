@@ -62,6 +62,20 @@ public class Curso {
         this.cargaHoraria = cargaHoraria;
     }
     
-    
+    public List<CursoDisciplina> getvCursoDisciplina() {
+        return vCursoDisciplina;
+    }
+
+    public void setvCursoDisciplina(List<CursoDisciplina> vCursoDisciplina) {
+        this.vCursoDisciplina = vCursoDisciplina;
+    }
+
+    public List<CursoDisciplina> getvCursoDisciplinaExclusao() {
+        return vCursoDisciplinaExclusao;
+    }
+
+    public void setvCursoDisciplinaExclusao(List<CursoDisciplina> vCursoDisciplinaExclusao) {
+        this.vCursoDisciplinaExclusao = vCursoDisciplinaExclusao;
+    } 
     
 }

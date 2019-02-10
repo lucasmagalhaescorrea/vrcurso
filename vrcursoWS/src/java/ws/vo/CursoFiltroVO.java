@@ -2,8 +2,8 @@ package ws.vo;
 
 public class CursoFiltroVO {
 
-    private String id;
-    private String descricao;
+    private String id = "";
+    private String descricao = "";
 
     public String getId() {
         return id;

@@ -71,10 +71,7 @@ public class AlunoDao implements IDao {
 
         Statement stm = Conexao.getStatement();
 
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE FROM aluno WHERE id = " + i_aluno.getId());
-
-        stm.executeUpdate(sql.toString());
+        stm.executeUpdate("DELETE FROM aluno WHERE id = " + i_aluno.getId());
     }
 
     public Aluno salvar(Aluno i_aluno) throws Exception {
@@ -89,7 +86,7 @@ public class AlunoDao implements IDao {
 
             stm.execute(sql.toString());
 
-            rst = Conexao.getStatement().executeQuery("select currval('aluno_id_seq')");
+            rst = stm.executeQuery("select currval('aluno_id_seq')");
             rst.next();
 
             i_aluno.setId(rst.getInt(1));

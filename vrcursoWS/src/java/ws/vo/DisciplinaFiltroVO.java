@@ -3,10 +3,10 @@ package ws.vo;
 
 public class DisciplinaFiltroVO {
     
-    private String id;
-    private String descricao;
-    private String diaSemana;
-    private String periodo;
+    private String id = "";
+    private String descricao = "";
+    private String diaSemana = "";
+    private String periodo = "";
 
     public String getId() {
         return id;
