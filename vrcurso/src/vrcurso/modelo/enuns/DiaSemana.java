@@ -2,7 +2,7 @@ package vrcurso.modelo.enuns;
 
 public enum DiaSemana {
 
-    DOMINGO(1, "DOMINGO"), SEGUNDA(2, "SEGUNDA"), TERÇA(3, "TERÇA"), QUARTA(4, "QUARTA"), QUINTA(5, "QUINTA"), SEXTA(6, "SEXTA"), SABADO(7, "SÁBADO");
+    DOMINGO(1, "DOMINGO"), SEGUNDA(2, "SEGUNDA"), TERCA(3, "TERÇA"), QUARTA(4, "QUARTA"), QUINTA(5, "QUINTA"), SEXTA(6, "SEXTA"), SABADO(7, "SÁBADO");
 
     private int id;
     private String descricao;

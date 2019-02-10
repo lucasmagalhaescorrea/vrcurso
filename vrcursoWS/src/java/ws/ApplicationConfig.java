@@ -32,6 +32,7 @@ public class ApplicationConfig extends Application {
         resources.add(ws.AlunoResource.class);
         resources.add(ws.CursoResource.class);
         resources.add(ws.DisciplinaResource.class);
+        resources.add(ws.MatriculaResource.class);
         resources.add(ws.ProfessorResource.class);
     }
     

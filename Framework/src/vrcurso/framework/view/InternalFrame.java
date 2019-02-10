@@ -43,10 +43,9 @@ public class InternalFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setTitle("VR Curso - Consulta de Professores");
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        setMaximizable(true);
         getContentPane().setLayout(null);
-
-        setBounds(0, 0, 400, 300);
     }// </editor-fold>//GEN-END:initComponents
 
 

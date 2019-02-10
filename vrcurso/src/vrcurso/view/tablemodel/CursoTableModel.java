@@ -11,6 +11,12 @@ public class CursoTableModel extends AbstractTableModel{
     private String[] vColunas = {"Código", "Descricao", "Duração", "Período", "Qtde. de Alunos", "Carga Horária"};
     private List<Curso> vCurso;
 
+    public CursoTableModel(List<Curso> vCurso) {
+        this.vCurso = vCurso;
+    }
+    
+    
+
     @Override
     public int getRowCount() {
         return vCurso.size();

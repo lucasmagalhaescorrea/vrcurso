@@ -1,45 +1,26 @@
 package vrcurso.view;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
 import vrcurso.framework.Mensagem;
 import vrcurso.framework.MensagensPadrao;
 import vrcurso.framework.exception.ValidacaoException;
 import vrcurso.framework.view.InternalFrame;
-import vrcurso.modelo.Professor;
-import vrcurso.service.ProfessorService;
-import vrcurso.view.tablemodel.ProfessorTableModel;
-import vrcurso.vo.ProfessorFiltroVO;
+import vrcurso.modelo.Curso;
+import vrcurso.service.CursoService;
+import vrcurso.view.tablemodel.CursoTableModel;
+import vrcurso.vo.CursoFiltroVO;
 
-public class ProfessorConsulta extends InternalFrame {
+public class CursoConsulta extends InternalFrame {
 
-    private List<Professor> vProfessor = new ArrayList<>();
-    private boolean isConsulta = false;
-    private JTextField txtCampoCod;
-    private JTextField txtCampoDesc;
+    private List<Curso> vCurso = new ArrayList<>();
 
-    public ProfessorConsulta(JFrame i_principal, JTextField i_txtCodigo, JTextField i_txtDescricao) throws Exception {
+    public CursoConsulta(JFrame i_principal) throws Exception {
         initComponents();
         mainFrame = i_principal;
-        
-        mainFrame.add(this);
 
-        txtCampoCod = i_txtCodigo;
-        txtCampoDesc = i_txtDescricao;
-        isConsulta = true;
-
-        toolbar.setEditarVisible(true);
-        toolbar.setInternalFrame(this);
-
-        setSelected(true);
-    }
-
-    public ProfessorConsulta(JFrame i_principal) throws Exception {
-        initComponents();
-        mainFrame = i_principal;
-        
         mainFrame.add(this);
 
         toolbar.setInternalFrame(this);
@@ -52,25 +33,25 @@ public class ProfessorConsulta extends InternalFrame {
 
         limparTabela(tblConsulta);
 
-        ProfessorFiltroVO oFiltro = new ProfessorFiltroVO();
-        oFiltro.setCpf(txtCPF.getText());
+        CursoFiltroVO oFiltro = new CursoFiltroVO();
         oFiltro.setId(txtCodigo.getText());
-        oFiltro.setNome(txtNome.getText());
+        oFiltro.setDescricao(txtDescricao.getText());
 
-        vProfessor = new ProfessorService().consultar(oFiltro);
+        vCurso = new CursoService().consultar(oFiltro);
 
         configurarTabela();
     }
 
     private void configurarTabela() {
-        tblConsulta.setModel(new ProfessorTableModel(vProfessor));
+        tblConsulta.setModel(new CursoTableModel(vCurso));
 
-        int[] tamCol = new int[5];
+        int[] tamCol = new int[6];
         tamCol[0] = 100;
         tamCol[1] = 200;
         tamCol[2] = 100;
         tamCol[3] = 100;
         tamCol[4] = 100;
+        tamCol[5] = 100;
 
         for (int i = 0; i < tblConsulta.getModel().getColumnCount(); i++) {
             tblConsulta.getColumnModel().getColumn(i).setMinWidth(tamCol[i]);
@@ -87,11 +68,11 @@ public class ProfessorConsulta extends InternalFrame {
             throw new ValidacaoException(MensagensPadrao.NENHUM_REGISTRO_SELECIONADO);
         }
 
-        Professor oProfessor = vProfessor.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow()));
+        Curso oCurso = vCurso.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow()));
 
-        ProfessorCadastro form = new ProfessorCadastro(mainFrame);
-        form.carregarProfessor(oProfessor.getId());
-        form.setVisible(true);
+//        ProfessorCadastro form = new ProfessorCadastro(mainFrame);
+//        form.carregarProfessor(oCurso.getId());
+//        form.setVisible(true);
     }
 
     @Override
@@ -100,10 +81,10 @@ public class ProfessorConsulta extends InternalFrame {
             throw new ValidacaoException(MensagensPadrao.NENHUM_REGISTRO_SELECIONADO);
         }
 
-        Professor oProfessor = vProfessor.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow()));
-        new ProfessorService().remover(oProfessor);
+        Curso oCurso = vCurso.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow()));
+        new CursoService().remover(oCurso);
 
-        vProfessor.remove(oProfessor);
+        vCurso.remove(oCurso);
         configurarTabela();
 
         Mensagem.exibirMensagem(this, MensagensPadrao.REGISTRO_EXCLUIDO_SUCESSO);
@@ -112,9 +93,9 @@ public class ProfessorConsulta extends InternalFrame {
     @Override
     public void novo() throws Exception {
 
-        ProfessorCadastro form = new ProfessorCadastro(mainFrame);
-        form.novo();
-        form.setVisible(true);
+//        ProfessorCadastro form = new ProfessorCadastro(mainFrame);
+//        form.novo();
+//        form.setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -126,17 +107,13 @@ public class ProfessorConsulta extends InternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblConsulta = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        txtCPF = new javax.swing.JTextField();
         txtCodigo = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        txtNome = new javax.swing.JTextField();
+        txtDescricao = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btnConsultar = new javax.swing.JButton();
 
         setClosable(true);
-        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        setMaximizable(true);
         setTitle("VR Cursos - Professor");
 
         toolbar.setConsultarVisible(true);
@@ -168,24 +145,18 @@ public class ProfessorConsulta extends InternalFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
         jPanel2.setLayout(null);
-
-        jLabel1.setText("CPF");
-        jPanel2.add(jLabel1);
-        jLabel1.setBounds(520, 30, 22, 16);
-        jPanel2.add(txtCPF);
-        txtCPF.setBounds(520, 55, 190, 22);
         jPanel2.add(txtCodigo);
         txtCodigo.setBounds(10, 55, 90, 22);
 
         jLabel2.setText("Código");
         jPanel2.add(jLabel2);
         jLabel2.setBounds(10, 30, 39, 16);
-        jPanel2.add(txtNome);
-        txtNome.setBounds(110, 55, 400, 22);
+        jPanel2.add(txtDescricao);
+        txtDescricao.setBounds(110, 55, 590, 22);
 
-        jLabel3.setText("Nome");
+        jLabel3.setText("Descrição");
         jPanel2.add(jLabel3);
-        jLabel3.setBounds(110, 30, 33, 16);
+        jLabel3.setBounds(110, 30, 90, 16);
 
         btnConsultar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnConsultar.png"))); // NOI18N
         btnConsultar.setText("Consultar");
@@ -245,13 +216,7 @@ public class ProfessorConsulta extends InternalFrame {
     private void tblConsultaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblConsultaMouseClicked
         try {
             if (evt.getClickCount() == 2) {
-                if (isConsulta) {
-                    txtCampoCod.setText(String.valueOf(vProfessor.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow())).getId()));
-                    txtCampoDesc.setText(String.valueOf(vProfessor.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow())).getNome()));
-                    dispose();
-                } else {
-                    editar();
-                }
+                editar();
             }
         } catch (ValidacaoException e) {
             Mensagem.exibirAlerta(this, e);
@@ -273,7 +238,6 @@ public class ProfessorConsulta extends InternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConsultar;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
@@ -281,8 +245,7 @@ public class ProfessorConsulta extends InternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblConsulta;
     private vrcurso.framework.view.ToolBarPadrao toolbar;
-    private javax.swing.JTextField txtCPF;
     private javax.swing.JTextField txtCodigo;
-    private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtDescricao;
     // End of variables declaration//GEN-END:variables
 }

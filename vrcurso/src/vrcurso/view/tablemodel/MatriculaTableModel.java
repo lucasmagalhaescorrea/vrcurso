@@ -11,6 +11,10 @@ public class MatriculaTableModel extends AbstractTableModel{
     private String[] vColunas = {"Matricula", "Aluno", "Curso", "Qtde. Disciplinas"};
     private List<Matricula> vMatricula;
 
+    public MatriculaTableModel(List<Matricula> vMatricula) {
+        this.vMatricula = vMatricula;
+    }
+
     @Override
     public int getRowCount() {
         return vMatricula.size();

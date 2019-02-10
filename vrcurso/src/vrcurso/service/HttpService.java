@@ -83,6 +83,11 @@ public class HttpService {
         public static String CURSO_CARREGAR = "http://localhost:8080/vrcursoWS/webresources/curso/carregar";
         public static String CURSO_SALVAR = "http://localhost:8080/vrcursoWS/webresources/curso/salvar";
         public static String CURSO_REMOVER = "http://localhost:8080/vrcursoWS/webresources/curso/remover";
+        
+        public static String MATRICULA_CONSULTAR = "http://localhost:8080/vrcursoWS/webresources/matricula/consultar";
+        public static String MATRICULA_CARREGAR = "http://localhost:8080/vrcursoWS/webresources/matricula/carregar";
+        public static String MATRICULA_SALVAR = "http://localhost:8080/vrcursoWS/webresources/matricula/salvar";
+        public static String MATRICULA_REMOVER = "http://localhost:8080/vrcursoWS/webresources/matricula/remover";
     }
 
 }

@@ -1,45 +1,30 @@
 package vrcurso.view;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
 import vrcurso.framework.Mensagem;
 import vrcurso.framework.MensagensPadrao;
 import vrcurso.framework.exception.ValidacaoException;
 import vrcurso.framework.view.InternalFrame;
-import vrcurso.modelo.Professor;
-import vrcurso.service.ProfessorService;
-import vrcurso.view.tablemodel.ProfessorTableModel;
-import vrcurso.vo.ProfessorFiltroVO;
+import vrcurso.modelo.Curso;
+import vrcurso.modelo.Matricula;
+import vrcurso.service.CursoService;
+import vrcurso.service.MatriculaService;
+import vrcurso.view.tablemodel.CursoTableModel;
+import vrcurso.view.tablemodel.MatriculaTableModel;
+import vrcurso.vo.CursoFiltroVO;
+import vrcurso.vo.MatriculaFiltroVO;
 
-public class ProfessorConsulta extends InternalFrame {
+public class MatriculaConsulta extends InternalFrame {
 
-    private List<Professor> vProfessor = new ArrayList<>();
-    private boolean isConsulta = false;
-    private JTextField txtCampoCod;
-    private JTextField txtCampoDesc;
+    private List<Matricula> vMatricula = new ArrayList<>();
 
-    public ProfessorConsulta(JFrame i_principal, JTextField i_txtCodigo, JTextField i_txtDescricao) throws Exception {
+    public MatriculaConsulta(JFrame i_principal) throws Exception {
         initComponents();
         mainFrame = i_principal;
-        
-        mainFrame.add(this);
 
-        txtCampoCod = i_txtCodigo;
-        txtCampoDesc = i_txtDescricao;
-        isConsulta = true;
-
-        toolbar.setEditarVisible(true);
-        toolbar.setInternalFrame(this);
-
-        setSelected(true);
-    }
-
-    public ProfessorConsulta(JFrame i_principal) throws Exception {
-        initComponents();
-        mainFrame = i_principal;
-        
         mainFrame.add(this);
 
         toolbar.setInternalFrame(this);
@@ -49,28 +34,27 @@ public class ProfessorConsulta extends InternalFrame {
 
     @Override
     public void consultar() throws Exception {
+        
+        validarCampos();
 
         limparTabela(tblConsulta);
 
-        ProfessorFiltroVO oFiltro = new ProfessorFiltroVO();
-        oFiltro.setCpf(txtCPF.getText());
-        oFiltro.setId(txtCodigo.getText());
-        oFiltro.setNome(txtNome.getText());
+        MatriculaFiltroVO oFiltro = new MatriculaFiltroVO();
+        oFiltro.setIdAluno(txtCodAluno.getText());
 
-        vProfessor = new ProfessorService().consultar(oFiltro);
+        vMatricula = new MatriculaService().consultar(oFiltro);
 
         configurarTabela();
     }
 
     private void configurarTabela() {
-        tblConsulta.setModel(new ProfessorTableModel(vProfessor));
+        tblConsulta.setModel(new MatriculaTableModel(vMatricula));
 
-        int[] tamCol = new int[5];
+        int[] tamCol = new int[4];
         tamCol[0] = 100;
         tamCol[1] = 200;
-        tamCol[2] = 100;
+        tamCol[2] = 200;
         tamCol[3] = 100;
-        tamCol[4] = 100;
 
         for (int i = 0; i < tblConsulta.getModel().getColumnCount(); i++) {
             tblConsulta.getColumnModel().getColumn(i).setMinWidth(tamCol[i]);
@@ -87,11 +71,11 @@ public class ProfessorConsulta extends InternalFrame {
             throw new ValidacaoException(MensagensPadrao.NENHUM_REGISTRO_SELECIONADO);
         }
 
-        Professor oProfessor = vProfessor.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow()));
+        Matricula oMatricula = vMatricula.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow()));
 
-        ProfessorCadastro form = new ProfessorCadastro(mainFrame);
-        form.carregarProfessor(oProfessor.getId());
-        form.setVisible(true);
+//        ProfessorCadastro form = new ProfessorCadastro(mainFrame);
+//        form.carregarProfessor(oCurso.getId());
+//        form.setVisible(true);
     }
 
     @Override
@@ -100,10 +84,10 @@ public class ProfessorConsulta extends InternalFrame {
             throw new ValidacaoException(MensagensPadrao.NENHUM_REGISTRO_SELECIONADO);
         }
 
-        Professor oProfessor = vProfessor.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow()));
-        new ProfessorService().remover(oProfessor);
+        Matricula oMatricula = vMatricula.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow()));
+        new MatriculaService().remover(oMatricula);
 
-        vProfessor.remove(oProfessor);
+        vMatricula.remove(oMatricula);
         configurarTabela();
 
         Mensagem.exibirMensagem(this, MensagensPadrao.REGISTRO_EXCLUIDO_SUCESSO);
@@ -112,9 +96,9 @@ public class ProfessorConsulta extends InternalFrame {
     @Override
     public void novo() throws Exception {
 
-        ProfessorCadastro form = new ProfessorCadastro(mainFrame);
-        form.novo();
-        form.setVisible(true);
+//        ProfessorCadastro form = new ProfessorCadastro(mainFrame);
+//        form.novo();
+//        form.setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -126,18 +110,14 @@ public class ProfessorConsulta extends InternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblConsulta = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        txtCPF = new javax.swing.JTextField();
-        txtCodigo = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        txtNome = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btnConsultar = new javax.swing.JButton();
+        txtCodAluno = new javax.swing.JTextField();
+        btnConsultarAluno = new javax.swing.JButton();
+        txtNomeAluno = new javax.swing.JTextField();
 
         setClosable(true);
-        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
-        setMaximizable(true);
-        setTitle("VR Cursos - Professor");
+        setTitle("VR Cursos - Matricula");
 
         toolbar.setConsultarVisible(true);
         toolbar.setNovoVisible(true);
@@ -169,23 +149,9 @@ public class ProfessorConsulta extends InternalFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
         jPanel2.setLayout(null);
 
-        jLabel1.setText("CPF");
-        jPanel2.add(jLabel1);
-        jLabel1.setBounds(520, 30, 22, 16);
-        jPanel2.add(txtCPF);
-        txtCPF.setBounds(520, 55, 190, 22);
-        jPanel2.add(txtCodigo);
-        txtCodigo.setBounds(10, 55, 90, 22);
-
-        jLabel2.setText("Código");
-        jPanel2.add(jLabel2);
-        jLabel2.setBounds(10, 30, 39, 16);
-        jPanel2.add(txtNome);
-        txtNome.setBounds(110, 55, 400, 22);
-
-        jLabel3.setText("Nome");
+        jLabel3.setText("Aluno");
         jPanel2.add(jLabel3);
-        jLabel3.setBounds(110, 30, 33, 16);
+        jLabel3.setBounds(10, 30, 90, 16);
 
         btnConsultar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnConsultar.png"))); // NOI18N
         btnConsultar.setText("Consultar");
@@ -201,7 +167,30 @@ public class ProfessorConsulta extends InternalFrame {
             }
         });
         jPanel2.add(btnConsultar);
-        btnConsultar.setBounds(720, 45, 90, 33);
+        btnConsultar.setBounds(390, 50, 90, 33);
+
+        txtCodAluno.setEditable(false);
+        txtCodAluno.setEnabled(false);
+        jPanel2.add(txtCodAluno);
+        txtCodAluno.setBounds(10, 55, 70, 22);
+
+        btnConsultarAluno.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vrcurso/framework/view/imagens/btnConsultar.png"))); // NOI18N
+        btnConsultarAluno.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnConsultarAluno.setContentAreaFilled(false);
+        btnConsultarAluno.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnConsultarAluno.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        btnConsultarAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarAlunoActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnConsultarAluno);
+        btnConsultarAluno.setBounds(80, 50, 30, 30);
+
+        txtNomeAluno.setEditable(false);
+        txtNomeAluno.setEnabled(false);
+        jPanel2.add(txtNomeAluno);
+        txtNomeAluno.setBounds(120, 55, 260, 22);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -245,13 +234,7 @@ public class ProfessorConsulta extends InternalFrame {
     private void tblConsultaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblConsultaMouseClicked
         try {
             if (evt.getClickCount() == 2) {
-                if (isConsulta) {
-                    txtCampoCod.setText(String.valueOf(vProfessor.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow())).getId()));
-                    txtCampoDesc.setText(String.valueOf(vProfessor.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow())).getNome()));
-                    dispose();
-                } else {
-                    editar();
-                }
+                editar();
             }
         } catch (ValidacaoException e) {
             Mensagem.exibirAlerta(this, e);
@@ -270,19 +253,39 @@ public class ProfessorConsulta extends InternalFrame {
         }
     }//GEN-LAST:event_btnConsultarActionPerformed
 
+    private void btnConsultarAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarAlunoActionPerformed
+        try {
+            txtCodAluno.setText("");
+            txtNomeAluno.setText("");
+
+            AlunoConsulta form = new AlunoConsulta(mainFrame, txtCodAluno, txtNomeAluno);
+            form.consultar();
+            form.setVisible(true);
+
+        } catch (ValidacaoException e) {
+            Mensagem.exibirAlerta(this, e);
+        } catch (Exception e) {
+            Mensagem.exibirErro(this, e);
+        }
+    }//GEN-LAST:event_btnConsultarAlunoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConsultar;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton btnConsultarAluno;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblConsulta;
     private vrcurso.framework.view.ToolBarPadrao toolbar;
-    private javax.swing.JTextField txtCPF;
-    private javax.swing.JTextField txtCodigo;
-    private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtCodAluno;
+    private javax.swing.JTextField txtNomeAluno;
     // End of variables declaration//GEN-END:variables
+
+    private void validarCampos() throws Exception {
+        if(txtCodAluno.getText().isEmpty()){
+            throw new ValidacaoException("Preencha corretamente os campos de busca!");
+        }
+    }
 }

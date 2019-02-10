@@ -1,23 +1,20 @@
 package vrcurso.view;
 
-import java.util.ArrayList;
 import javax.swing.JFrame;
 import vrcurso.framework.Format;
 import vrcurso.framework.Mensagem;
 import vrcurso.framework.MensagensPadrao;
 import vrcurso.framework.exception.ValidacaoException;
 import vrcurso.framework.view.InternalFrame;
-import vrcurso.framework.vo.ItemComboBoxVO;
-import vrcurso.modelo.Professor;
-import vrcurso.modelo.enuns.Titulo;
-import vrcurso.service.ProfessorService;
-import vrcurso.vo.ProfessorFiltroVO;
+import vrcurso.modelo.Aluno;
+import vrcurso.service.AlunoService;
+import vrcurso.vo.AlunoFiltroVO;
 
-public class ProfessorCadastro extends InternalFrame {
+public class AlunoCadastro extends InternalFrame {
 
-    private Professor oProfessor;
+    private Aluno oAluno;
 
-    public ProfessorCadastro(JFrame i_principal) throws Exception {
+    public AlunoCadastro(JFrame i_principal) throws Exception {
         initComponents();
         
         mainFrame = i_principal;
@@ -26,50 +23,44 @@ public class ProfessorCadastro extends InternalFrame {
 
         toolbar.setInternalFrame(this);
         
-        ArrayList vItemCombo = new ArrayList();
-        vItemCombo.add(new ItemComboBoxVO(Titulo.DOUTOR.getId(), Titulo.DOUTOR.getDescricao()));
-        vItemCombo.add(new ItemComboBoxVO(Titulo.MESTRE.getId(), Titulo.MESTRE.getDescricao()));
-        vItemCombo.add(new ItemComboBoxVO(Titulo.PAD.getId(), Titulo.PAD.getDescricao()));
-        cboTitulo.setModel(vItemCombo);
-        
         setSelected(true);
     }
 
     @Override
     public void salvar() throws Exception {
-        oProfessor.setNome(txtNome.getText());
-        oProfessor.setCpf( Long.parseLong(txtCPF.getText()));
-        oProfessor.setRg(txtRG.getText());
-        oProfessor.setTitulo(cboTitulo.getId());
+        oAluno.setNome(txtNome.getText());
+        oAluno.setMatricula(Long.parseLong(txtMatricula.getText()));
+        oAluno.setCpf( Long.parseLong(txtCPF.getText()));
+        oAluno.setRg(txtRG.getText());
         
-        oProfessor = new ProfessorService().salvar(oProfessor);
+        oAluno = new AlunoService().salvar(oAluno);
         
-        carregarProfessor(oProfessor.getId());
+        carregarAluno(oAluno.getId());
         
         Mensagem.exibirMensagem(this, MensagensPadrao.REGISTRO_SALVO_SUCESSO);
     }
 
     @Override
     public void novo() throws Exception {
-        oProfessor = new Professor();
+        oAluno = new Aluno();
         txtCodigo.setText("");
         txtNome.setText("");
+        txtMatricula.setText("");
         txtCPF.setText("");
         txtRG.setText("");
-        cboTitulo.setSelectedIndex(0);
     }
 
-    public void carregarProfessor(int i_id) throws Exception {
+    public void carregarAluno(int i_id) throws Exception {
 
-        ProfessorFiltroVO oFiltro = new ProfessorFiltroVO();
+        AlunoFiltroVO oFiltro = new AlunoFiltroVO();
         oFiltro.setId(String.valueOf(i_id));
 
-        oProfessor = new ProfessorService().consultar(oFiltro).get(0);
-        txtCodigo.setText(Format.number(oProfessor.getId(), 6));
-        txtNome.setText(oProfessor.getNome());
-        txtCPF.setText(Format.number(oProfessor.getCpf(), 11));
-        txtRG.setText(oProfessor.getRg());
-        cboTitulo.setId(oProfessor.getTitulo());
+        oAluno = new AlunoService().consultar(oFiltro).get(0);
+        txtCodigo.setText(Format.number(oAluno.getId(), 6));
+        txtNome.setText(oAluno.getNome());
+        txtMatricula.setText(Format.number(oAluno.getCpf(), 6));
+        txtCPF.setText(Format.number(oAluno.getCpf(), 11));
+        txtRG.setText(oAluno.getRg());
     }
 
     @SuppressWarnings("unchecked")
@@ -78,24 +69,24 @@ public class ProfessorCadastro extends InternalFrame {
 
         toolbar = new vrcurso.framework.view.ToolBarPadrao();
         jPanel1 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        txtCodigo = new javax.swing.JTextField();
-        txtNome = new javax.swing.JTextField();
-        txtCPF = new javax.swing.JTextField();
-        txtRG = new javax.swing.JTextField();
-        cboTitulo = new vrcurso.framework.view.ComboBox();
         jPanel2 = new javax.swing.JPanel();
         btnSalvar = new javax.swing.JButton();
         btnSair = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txtCodigo = new javax.swing.JTextField();
+        txtNome = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        txtMatricula = new javax.swing.JTextField();
+        txtCPF = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtRG = new javax.swing.JTextField();
 
         setClosable(true);
         setMaximizable(true);
-        setTitle("VR Cursos - Professor");
+        setTitle("VR Cursos -Aluno");
         setEnabled(false);
 
         toolbar.setNovoVisible(true);
@@ -103,50 +94,6 @@ public class ProfessorCadastro extends InternalFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Professor"));
-        jPanel3.setLayout(null);
-
-        jLabel1.setText("Código");
-        jPanel3.add(jLabel1);
-        jLabel1.setBounds(10, 30, 39, 16);
-
-        jLabel2.setText("Nome");
-        jPanel3.add(jLabel2);
-        jLabel2.setBounds(120, 30, 33, 16);
-
-        jLabel3.setText("CPF");
-        jPanel3.add(jLabel3);
-        jLabel3.setBounds(10, 80, 22, 16);
-
-        jLabel4.setText("RG");
-        jPanel3.add(jLabel4);
-        jLabel4.setBounds(180, 80, 16, 16);
-
-        jLabel5.setText("Título");
-        jPanel3.add(jLabel5);
-        jLabel5.setBounds(350, 80, 140, 16);
-
-        txtCodigo.setEditable(false);
-        jPanel3.add(txtCodigo);
-        txtCodigo.setBounds(10, 50, 100, 22);
-
-        txtNome.setNextFocusableComponent(txtCPF);
-        jPanel3.add(txtNome);
-        txtNome.setBounds(120, 50, 500, 22);
-
-        txtCPF.setNextFocusableComponent(txtRG);
-        jPanel3.add(txtCPF);
-        txtCPF.setBounds(10, 100, 160, 22);
-
-        txtRG.setNextFocusableComponent(cboTitulo);
-        jPanel3.add(txtRG);
-        txtRG.setBounds(180, 100, 160, 22);
-
-        cboTitulo.setNextFocusableComponent(btnSalvar);
-        jPanel3.add(cboTitulo);
-        cboTitulo.setBounds(350, 100, 270, 22);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -185,7 +132,7 @@ public class ProfessorCadastro extends InternalFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(427, Short.MAX_VALUE)
                 .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
                 .addComponent(btnSair, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -201,13 +148,50 @@ public class ProfessorCadastro extends InternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Aluno"));
+        jPanel3.setLayout(null);
+
+        jLabel1.setText("Código");
+        jPanel3.add(jLabel1);
+        jLabel1.setBounds(10, 30, 39, 16);
+
+        txtCodigo.setEditable(false);
+        txtCodigo.setEnabled(false);
+        jPanel3.add(txtCodigo);
+        txtCodigo.setBounds(10, 50, 100, 22);
+        jPanel3.add(txtNome);
+        txtNome.setBounds(120, 50, 500, 22);
+
+        jLabel2.setText("Nome");
+        jPanel3.add(jLabel2);
+        jLabel2.setBounds(120, 30, 33, 16);
+
+        jLabel3.setText("Matrícula");
+        jPanel3.add(jLabel3);
+        jLabel3.setBounds(10, 80, 70, 16);
+        jPanel3.add(txtMatricula);
+        txtMatricula.setBounds(10, 100, 140, 22);
+        jPanel3.add(txtCPF);
+        txtCPF.setBounds(160, 100, 160, 22);
+
+        jLabel4.setText("CPF");
+        jPanel3.add(jLabel4);
+        jLabel4.setBounds(160, 80, 22, 16);
+
+        jLabel5.setText("RG");
+        jPanel3.add(jLabel5);
+        jLabel5.setBounds(330, 80, 16, 16);
+        jPanel3.add(txtRG);
+        txtRG.setBounds(330, 100, 160, 22);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -215,7 +199,7 @@ public class ProfessorCadastro extends InternalFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -257,7 +241,6 @@ public class ProfessorCadastro extends InternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSair;
     private javax.swing.JButton btnSalvar;
-    private vrcurso.framework.view.ComboBox cboTitulo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -269,6 +252,7 @@ public class ProfessorCadastro extends InternalFrame {
     private vrcurso.framework.view.ToolBarPadrao toolbar;
     private javax.swing.JTextField txtCPF;
     private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtMatricula;
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtRG;
     // End of variables declaration//GEN-END:variables

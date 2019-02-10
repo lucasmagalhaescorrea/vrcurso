@@ -3,20 +3,21 @@ package vrcurso.view.tablemodel;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import vrcurso.framework.Format;
-import vrcurso.modelo.Aluno;
+import vrcurso.modelo.CursoDisciplina;
+import vrcurso.modelo.enuns.DiaSemana;
 
-public class AlunoTableModel extends AbstractTableModel{
+public class CursoDisciplinaTableModel  extends AbstractTableModel{
     
-    private String[] vColunas = {"Código", "Nome", "RG", "CPF", "Título"};
-    private List<Aluno> vAluno;
+    private String[] vColunas = {"Código", "Descricao" , "Professor", "Dia Semana"};
+    private List<CursoDisciplina> vDisciplina;
 
-    public AlunoTableModel(List<Aluno> vAluno) {
-        this.vAluno = vAluno;
+    public CursoDisciplinaTableModel(List<CursoDisciplina> vDisciplina) {
+        this.vDisciplina = vDisciplina;
     }
 
     @Override
     public int getRowCount() {
-        return vAluno.size();
+        return vDisciplina.size();
     }
 
     @Override
@@ -37,19 +38,17 @@ public class AlunoTableModel extends AbstractTableModel{
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         
-        Aluno oAluno = vAluno.get(rowIndex);
+        CursoDisciplina oDisciplina = vDisciplina.get(rowIndex);
         
         switch(columnIndex){
             case 0:
-                return Format.number(oAluno.getId(), 6);
+                return Format.number(oDisciplina.getId(), 6);
             case 1:
-                return Format.number(oAluno.getMatricula(), 6);
+                return oDisciplina.getDisciplina();
             case 2:
-                return oAluno.getNome();
+                return oDisciplina.getProfessor();
             case 3:
-                return oAluno.getRg();
-            case 4:
-                return oAluno.getCpf();
+                return DiaSemana.getDescricao(oDisciplina.getDiaSemana());
             default:
                 return "";
         }
