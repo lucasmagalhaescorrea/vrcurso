@@ -2,6 +2,7 @@ package vrcurso.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JFrame;
 import vrcurso.framework.Mensagem;
 import vrcurso.framework.MensagensPadrao;
 import vrcurso.framework.exception.ValidacaoException;
@@ -12,7 +13,6 @@ import vrcurso.view.tablemodel.ProfessorTableModel;
 import vrcurso.vo.ProfessorFiltroVO;
 
 public class ProfessorConsulta extends InternalFrame {
-
     
     private List<Professor> vProfessor = new ArrayList<>();
     
@@ -20,7 +20,9 @@ public class ProfessorConsulta extends InternalFrame {
     public void consultar() throws Exception {
         
         ProfessorFiltroVO oFiltro = new ProfessorFiltroVO();
-        oFiltro.setCpf(txtCodigo.getText());
+        oFiltro.setCpf(txtCPF.getText());
+        oFiltro.setId(txtCodigo.getText());
+        oFiltro.setNome(txtNome.getText());
         
         vProfessor = new ProfessorService().consultar(oFiltro);
         
@@ -54,7 +56,7 @@ public class ProfessorConsulta extends InternalFrame {
         
         Professor oProfessor = vProfessor.get(tblConsulta.convertRowIndexToModel(tblConsulta.getSelectedRow()));
         
-        ProfessorCadastro form = new ProfessorCadastro();
+        ProfessorCadastro form = new ProfessorCadastro(mainFrame);
         form.carregarProfessor(oProfessor.getId());
         form.setVisible(true);
     }
@@ -74,15 +76,18 @@ public class ProfessorConsulta extends InternalFrame {
     @Override
     public void novo() throws Exception {
         
-        ProfessorCadastro form = new ProfessorCadastro();
+        ProfessorCadastro form = new ProfessorCadastro(mainFrame);
         form.novo();
         form.setVisible(true);
     }
     
-    public ProfessorConsulta() {
+    public ProfessorConsulta(JFrame i_principal) throws Exception {
         initComponents();
+        mainFrame = i_principal;
         
         toolbar.setInternalFrame(this);
+        
+        setSelected(true);
     }
     
     @SuppressWarnings("unchecked")

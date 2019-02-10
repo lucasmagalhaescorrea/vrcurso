@@ -11,10 +11,12 @@ public class ProfessorService extends HttpService {
 
     public List<Professor> consultar(ProfessorFiltroVO i_professorFiltro) throws Exception {
 
-        Type professorType = new TypeToken<ProfessorFiltroVO>() {
+        Type professorFiltroType = new TypeToken<ProfessorFiltroVO>() {
         }.getType();
         
-        List<Professor> vProfessor = new Gson().fromJson(consumirWebService(EndPoints.PROFESSOR_CONSULTAR, new Gson().toJson(i_professorFiltro, professorType)), List.class);
+        Type professorType = new TypeToken<List<Professor>>(){}.getType();
+        
+        List<Professor> vProfessor = new Gson().fromJson(consumirWebService(EndPoints.PROFESSOR_CONSULTAR, new Gson().toJson(i_professorFiltro, professorFiltroType)), professorType);
 
         return vProfessor;
     }

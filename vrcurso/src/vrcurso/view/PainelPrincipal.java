@@ -1,9 +1,8 @@
 package vrcurso.view;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.Component;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import vrcurso.framework.Mensagem;
 
 public class PainelPrincipal extends javax.swing.JFrame {
     
@@ -68,8 +67,13 @@ public class PainelPrincipal extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         if(formProfessorConsulta == null) {
-            formProfessorConsulta = new ProfessorConsulta();
+            try {
+                formProfessorConsulta = new ProfessorConsulta(this);
             this.add(formProfessorConsulta);
+            } catch (Exception e) {
+                Mensagem.exibirErro(this, e);
+            }
+            
         }
         
         formProfessorConsulta.setVisible(true);

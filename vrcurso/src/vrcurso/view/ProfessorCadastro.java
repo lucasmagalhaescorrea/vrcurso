@@ -1,6 +1,7 @@
 package vrcurso.view;
 
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import vrcurso.framework.Format;
 import vrcurso.framework.Mensagem;
 import vrcurso.framework.MensagensPadrao;
@@ -16,8 +17,12 @@ public class ProfessorCadastro extends InternalFrame {
 
     private Professor oProfessor;
 
-    public ProfessorCadastro() {
+    public ProfessorCadastro(JFrame i_principal) throws Exception {
         initComponents();
+        
+        mainFrame = i_principal;
+        
+        mainFrame.add(this);
 
         toolbar.setInternalFrame(this);
         
@@ -26,6 +31,8 @@ public class ProfessorCadastro extends InternalFrame {
         vItemCombo.add(new ItemComboBoxVO(Titulo.MESTRE.getId(), Titulo.MESTRE.getDescricao()));
         vItemCombo.add(new ItemComboBoxVO(Titulo.PAD.getId(), Titulo.PAD.getDescricao()));
         cboTitulo.setModel(vItemCombo);
+        
+        setSelected(true);
     }
 
     @Override

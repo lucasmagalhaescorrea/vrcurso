@@ -1,6 +1,10 @@
 package vrcurso.framework.view;
 
+import javax.swing.JFrame;
+
 public class InternalFrame extends javax.swing.JInternalFrame {
+    
+    protected JFrame mainFrame;
     
     public void consultar() throws Exception {
     };
